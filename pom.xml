@@ -19,6 +19,10 @@
     <module>build/bom</module>
     <module>build/build-tool</module>
     <module>build/build-parent</module>
+    <module>client/core</module>
+    <module>client/starter</module>
+    <module>server/core</module>
+    <module>server/starter</module>
   </modules>
 
 </project>
