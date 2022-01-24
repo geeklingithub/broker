@@ -9,20 +9,20 @@
     <groupId>doodle</groupId>
     <artifactId>doodle-broker-build</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>build/build-tool/pom.xml</relativePath>
+    <relativePath>doodle-broker-build/pom.xml</relativePath>
   </parent>
 
   <artifactId>doodle-broker</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>build/bom</module>
-    <module>build/build-tool</module>
-    <module>build/build-parent</module>
-    <module>client/core</module>
-    <module>client/starter</module>
-    <module>server/core</module>
-    <module>server/starter</module>
+    <module>doodle-broker-bom</module>
+    <module>doodle-broker-build</module>
+    <module>doodle-broker-parent</module>
+    <module>doodle-broker-client</module>
+    <module>doodle-broker-client-starter</module>
+    <module>doodle-broker-server</module>
+    <module>doodle-broker-server-starter</module>
   </modules>
 
 </project>
