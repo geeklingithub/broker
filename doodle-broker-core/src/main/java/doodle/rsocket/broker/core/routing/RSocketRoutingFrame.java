@@ -13,3 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.core.routing;
+
+public class RSocketRoutingFrame {
+  private final RSocketRoutingFrameType frameType;
+  private final int flags;
+
+  protected RSocketRoutingFrame(RSocketRoutingFrameType frameType, int flags) {
+    this.frameType = frameType;
+    this.flags = flags;
+  }
+
+  public RSocketRoutingFrameType getFrameType() {
+    return frameType;
+  }
+
+  public int getFlags() {
+    return flags;
+  }
+}

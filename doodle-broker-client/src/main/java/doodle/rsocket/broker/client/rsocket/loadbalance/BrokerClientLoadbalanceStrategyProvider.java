@@ -13,3 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.client.rsocket.loadbalance;
+
+import io.rsocket.loadbalance.LoadbalanceStrategy;
+import java.util.function.Supplier;
+
+@FunctionalInterface
+public interface BrokerClientLoadbalanceStrategyProvider extends Supplier<LoadbalanceStrategy> {}

@@ -13,3 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.client.rsocket;
+
+import org.springframework.messaging.rsocket.RSocketRequester;
+
+@FunctionalInterface
+public interface BrokerClientRSocketRequesterBuilderCustomizer {
+  void customize(RSocketRequester.Builder builder);
+}

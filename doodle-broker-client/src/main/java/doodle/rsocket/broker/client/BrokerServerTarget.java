@@ -13,3 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.client;
+
+public class BrokerServerTarget {
+  private String key;
+  private String host;
+  private int port;
+
+  public String getKey() {
+    return key;
+  }
+
+  public void setKey(String key) {
+    this.key = key;
+  }
+
+  public String getHost() {
+    return host;
+  }
+
+  public void setHost(String host) {
+    this.host = host;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+}

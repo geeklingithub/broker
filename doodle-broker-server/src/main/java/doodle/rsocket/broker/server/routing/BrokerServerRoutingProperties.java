@@ -13,3 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.routing;
+
+import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_SERVER_ROUTING_DEFAULT_LB_STRATEGY;
+
+public class BrokerServerRoutingProperties {
+
+  private String defaultLBStrategy = RSOCKET_SERVER_ROUTING_DEFAULT_LB_STRATEGY;
+
+  public String getDefaultLBStrategy() {
+    return defaultLBStrategy;
+  }
+
+  public void setDefaultLBStrategy(String defaultLBStrategy) {
+    this.defaultLBStrategy = defaultLBStrategy;
+  }
+}

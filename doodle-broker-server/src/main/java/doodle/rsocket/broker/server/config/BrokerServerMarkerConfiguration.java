@@ -13,3 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.config;
+
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootConfiguration(proxyBeanMethods = false)
+public class BrokerServerMarkerConfiguration {
+
+  @Bean
+  public Marker brokerServerEnableMarker() {
+    return new Marker();
+  }
+
+  class Marker {}
+}

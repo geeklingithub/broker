@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-doodle.broker.server.config.BrokerServerAutoConfiguration
+doodle.rsocket.broker.server.config.BrokerServerAutoConfiguration\
+

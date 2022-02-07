@@ -13,3 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server;
+
+import doodle.rsocket.broker.server.config.BrokerServerMarkerConfiguration;
+import java.lang.annotation.*;
+import org.springframework.context.annotation.Import;
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@Import(BrokerServerMarkerConfiguration.class)
+public @interface EnableBrokerServer {}

@@ -13,3 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.proxy;
+
+import java.net.InetAddress;
+import java.time.Duration;
+
+public interface ConfigurableBrokerProxyServerFactory {
+  void setHost(InetAddress host);
+
+  void setPort(int port);
+
+  void setLifecycleTimeout(Duration lifecycleTimeout);
+}

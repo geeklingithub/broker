@@ -13,3 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.proxy;
+
+import java.net.InetAddress;
+
+public class BrokerProxyServerProperties {
+  private InetAddress host;
+  private int port;
+
+  public InetAddress getHost() {
+    return host;
+  }
+
+  public void setHost(InetAddress host) {
+    this.host = host;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+}

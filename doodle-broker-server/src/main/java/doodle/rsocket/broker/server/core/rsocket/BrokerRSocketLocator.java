@@ -13,3 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.core.rsocket;
+
+import doodle.rsocket.broker.core.routing.RSocketRoutingAddress;
+import doodle.rsocket.broker.core.routing.RSocketRoutingType;
+import io.rsocket.RSocket;
+
+public interface BrokerRSocketLocator {
+
+  boolean supports(RSocketRoutingType routingType); // check routing type
+
+  RSocket locate(RSocketRoutingAddress address); // locate a DelegatingRSocket
+}

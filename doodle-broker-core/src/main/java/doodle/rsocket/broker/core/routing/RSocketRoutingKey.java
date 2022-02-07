@@ -13,3 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.core.routing;
+
+public interface RSocketRoutingKey {
+
+  // well known key
+  RSocketRoutingWellKnownKey getWellKnownKey();
+
+  // extension key
+  String getKey();
+
+  static RSocketRoutingKey of(String key) {
+    return new RSocketRoutingImmutableKey(key);
+  }
+
+  static RSocketRoutingKey of(RSocketRoutingWellKnownKey wellKnownKey) {
+    return wellKnownKey.getKey();
+  }
+}

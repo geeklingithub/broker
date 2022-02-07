@@ -13,3 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.util;
+
+import java.util.Collection;
+import java.util.List;
+
+public interface IndexedMap<K, V, INDEX> {
+  V get(K key);
+
+  V put(K key, V value, INDEX index);
+
+  V remove(K key);
+
+  int size();
+
+  boolean isEmpty();
+
+  void clear();
+
+  Collection<V> values();
+
+  List<V> query(INDEX index);
+}

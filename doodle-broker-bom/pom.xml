@@ -15,8 +15,29 @@
   <artifactId>doodle-broker-bom</artifactId>
   <packaging>pom</packaging>
 
+  <properties>
+    <dep.guava.version>30.0-jre</dep.guava.version>
+    <dep.agrona.version>1.11.0</dep.agrona.version>
+    <dep.roaringbitmap.version>0.9.15</dep.roaringbitmap.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${dep.guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.agrona</groupId>
+        <artifactId>agrona</artifactId>
+        <version>${dep.agrona.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.roaringbitmap</groupId>
+        <artifactId>RoaringBitmap</artifactId>
+        <version>${dep.roaringbitmap.version}</version>
+      </dependency>
       <dependency>
         <groupId>doodle</groupId>
         <artifactId>doodle-broker-client</artifactId>
@@ -25,6 +46,11 @@
       <dependency>
         <groupId>doodle</groupId>
         <artifactId>doodle-broker-client-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>doodle</groupId>
+        <artifactId>doodle-broker-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

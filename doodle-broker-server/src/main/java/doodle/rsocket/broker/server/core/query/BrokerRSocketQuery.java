@@ -13,3 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.core.query;
+
+import doodle.rsocket.broker.core.routing.RSocketRoutingTags;
+import io.rsocket.RSocket;
+import java.util.List;
+
+@FunctionalInterface
+public interface BrokerRSocketQuery {
+  List<RSocket> query(RSocketRoutingTags tags); // query by tags
+}

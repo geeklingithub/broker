@@ -13,3 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server;
+
+public final class BrokerServerConstants {
+  public static final String PREFIX = "magoko.broker.server";
+
+  public static final String RSOCKET_PROXY_SERVER_DAEMON_AWAIT_THREAD_NAME =
+      "RSocketBrokerProxyServer";
+
+  public static final String RSOCKET_SERVER_ROUTING_ROUND_ROBIN_LB_STRATEGY = "RoundRobin";
+
+  public static final String RSOCKET_SERVER_ROUTING_DEFAULT_LB_STRATEGY =
+      System.getProperty(
+          PREFIX + ".routing.loadbalance-strategy", RSOCKET_SERVER_ROUTING_ROUND_ROBIN_LB_STRATEGY);
+
+  private BrokerServerConstants() {}
+}

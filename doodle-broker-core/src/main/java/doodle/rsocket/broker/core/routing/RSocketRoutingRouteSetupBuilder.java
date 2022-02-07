@@ -13,3 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.core.routing;
+
+import java.util.Objects;
+
+public class RSocketRoutingRouteSetupBuilder
+    extends RSocketRoutingTagsBuilder<RSocketRoutingRouteSetupBuilder> {
+
+  private final RSocketRoutingRouteId routeId;
+
+  RSocketRoutingRouteSetupBuilder(RSocketRoutingRouteId routeId) {
+    this.routeId = Objects.requireNonNull(routeId);
+  }
+
+  public RSocketRoutingRouteSetup build() {
+    return new RSocketRoutingRouteSetup(this.routeId, buildTags());
+  }
+}

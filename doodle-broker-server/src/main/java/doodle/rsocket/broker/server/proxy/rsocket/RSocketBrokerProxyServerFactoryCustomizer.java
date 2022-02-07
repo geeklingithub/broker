@@ -13,3 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package doodle.rsocket.broker.server.proxy.rsocket;
+
+public interface RSocketBrokerProxyServerFactoryCustomizer {
+  void customize(RSocketBrokerProxyServerFactory serverFactory);
+}
