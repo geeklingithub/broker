@@ -16,7 +16,7 @@
 package doodle.rsocket.broker.client;
 
 public final class BrokerClientConstants {
-  public static final String PREFIX = "magoko.broker.client";
+  public static final String PREFIX = "doodle.rsocket.broker.client";
 
   private BrokerClientConstants() {}
 }

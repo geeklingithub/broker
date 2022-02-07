@@ -20,7 +20,9 @@ import doodle.rsocket.broker.server.proxy.BrokerProxyServerProperties;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = BrokerServerConstants.PREFIX)
+import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
+
+@ConfigurationProperties(PREFIX)
 public class BrokerServerProperties {
 
   private final BrokerProxyServerProperties proxy = new BrokerProxyServerProperties();

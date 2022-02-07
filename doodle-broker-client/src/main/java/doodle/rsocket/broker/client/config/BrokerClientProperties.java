@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = PREFIX)
+@ConfigurationProperties(PREFIX)
 public class BrokerClientProperties {
 
   private RSocketRoutingRouteId routeId = RSocketRoutingRouteId.random();
