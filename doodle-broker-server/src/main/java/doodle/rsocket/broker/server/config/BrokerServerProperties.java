@@ -15,18 +15,20 @@
  */
 package doodle.rsocket.broker.server.config;
 
-import doodle.rsocket.broker.server.BrokerServerConstants;
+import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
+
 import doodle.rsocket.broker.server.proxy.BrokerProxyServerProperties;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 @ConfigurationProperties(PREFIX)
 public class BrokerServerProperties {
 
+  @NestedConfigurationProperty
   private final BrokerProxyServerProperties proxy = new BrokerProxyServerProperties();
 
+  @NestedConfigurationProperty
   private final BrokerServerRoutingProperties routing = new BrokerServerRoutingProperties();
 
   public BrokerProxyServerProperties getProxy() {
