@@ -7,12 +7,12 @@
 
   <parent>
     <groupId>doodle</groupId>
-    <artifactId>doodle-broker-parent</artifactId>
+    <artifactId>doodle-broker-starters</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../doodle-broker-parent/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>doodle-broker-client-starter</artifactId>
+  <artifactId>doodle-broker-server-starter</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>
@@ -22,15 +22,19 @@
     </dependency>
     <dependency>
       <groupId>doodle</groupId>
-      <artifactId>doodle-broker-client</artifactId>
+      <artifactId>doodle-broker-server</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-messaging</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-rsocket</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.rsocket</groupId>
-      <artifactId>rsocket-transport-netty</artifactId>
+      <groupId>org.agrona</groupId>
+      <artifactId>agrona</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.roaringbitmap</groupId>
+      <artifactId>RoaringBitmap</artifactId>
     </dependency>
   </dependencies>
 

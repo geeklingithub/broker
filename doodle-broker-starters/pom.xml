@@ -7,22 +7,17 @@
 
   <parent>
     <groupId>doodle</groupId>
-    <artifactId>doodle-broker-build</artifactId>
+    <artifactId>doodle-broker-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>doodle-broker-build/pom.xml</relativePath>
+    <relativePath>../doodle-broker-parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>doodle-broker</artifactId>
+  <artifactId>doodle-broker-starters</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>doodle-broker-bom</module>
-    <module>doodle-broker-build</module>
-    <module>doodle-broker-parent</module>
-    <module>doodle-broker-client</module>
-    <module>doodle-broker-core</module>
-    <module>doodle-broker-server</module>
-    <module>doodle-broker-starters</module>
+    <module>doodle-broker-client-starter</module>
+    <module>doodle-broker-server-starter</module>
   </modules>
 
 </project>
