@@ -16,8 +16,8 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>doodle-broker-client-starter</module>
-    <module>doodle-broker-server-starter</module>
+    <module>doodle-broker-starter-client</module>
+    <module>doodle-broker-starter-server</module>
   </modules>
 
 </project>

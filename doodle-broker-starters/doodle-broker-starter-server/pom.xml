@@ -12,7 +12,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>doodle-broker-server-starter</artifactId>
+  <artifactId>doodle-broker-starter-server</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>

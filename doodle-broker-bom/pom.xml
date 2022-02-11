@@ -45,7 +45,7 @@
       </dependency>
       <dependency>
         <groupId>doodle</groupId>
-        <artifactId>doodle-broker-client-starter</artifactId>
+        <artifactId>doodle-broker-starter-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -60,7 +60,7 @@
       </dependency>
       <dependency>
         <groupId>doodle</groupId>
-        <artifactId>doodle-broker-server-starter</artifactId>
+        <artifactId>doodle-broker-stater-server</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
