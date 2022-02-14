@@ -16,6 +16,7 @@
   <packaging>pom</packaging>
 
   <properties>
+    <dep.spring-boot.version>2.5.1</dep.spring-boot.version>
     <dep.guava.version>30.0-jre</dep.guava.version>
     <dep.agrona.version>1.11.0</dep.agrona.version>
     <dep.roaringbitmap.version>0.9.15</dep.roaringbitmap.version>
@@ -23,6 +24,13 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${dep.spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
