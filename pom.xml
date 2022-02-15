@@ -23,6 +23,7 @@
     <module>doodle-broker-core</module>
     <module>doodle-broker-server</module>
     <module>doodle-broker-starters</module>
+    <module>samples</module>
   </modules>
 
 </project>

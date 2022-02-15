@@ -1,0 +1,6 @@
+doodle:
+  rsocket:
+    broker:
+      server:
+        proxy:
+          port: 8001
