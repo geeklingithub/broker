@@ -54,6 +54,7 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
       MimeType mimeType = MimeType.valueOf(setupPayload.metadataMimeType());
       Map<String, Object> setupMetadataMap = // result map always be exists
           this.metadataExtractor.extract(setupPayload, mimeType);
+      // TODO: 2022/3/11 process BROKER_INFO
       if (setupMetadataMap.containsKey(ROUTING_FRAME_METADATA_KEY)) {
         RSocketRoutingFrame routingFrame =
             (RSocketRoutingFrame) setupMetadataMap.get(ROUTING_FRAME_METADATA_KEY);
@@ -63,6 +64,8 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
           RSocketRoutingRouteSetup routeSetup = (RSocketRoutingRouteSetup) routingFrame;
           return Mono.defer(
               () -> {
+                // TODO: 2022/3/11 maybe wrap ROUTE_SETUP to ROUTE_JOIN and build routing table with
+                // ROUTE_JOIN
                 routingIndex.put(routeSetup.getRouteId(), wrapRSocket, routeSetup.getTags());
                 return finalize(sendingSocket, doCleanup);
               });
