@@ -87,6 +87,16 @@ public class RSocketRoutingFrameEncoder extends AbstractEncoder<RSocketRoutingFr
                 routeRemove.getTimestamp(),
                 routingFrame.getFlags());
         break;
+      case BROKER_INFO:
+        RSocketRoutingBrokerInfo brokerInfo = (RSocketRoutingBrokerInfo) routingFrame;
+        encoded =
+            RSocketRoutingBrokerInfoCodec.encode(
+                allocator,
+                brokerInfo.getBrokerId(),
+                brokerInfo.getTimestamp(),
+                brokerInfo.getTags(),
+                routingFrame.getFlags());
+        break;
       case ADDRESS:
         RSocketRoutingAddress address = (RSocketRoutingAddress) routingFrame;
         encoded =
