@@ -19,7 +19,10 @@ package doodle.rsocket.broker.core.routing;
 public enum RSocketRoutingFrameType {
   RESERVED(0x00), // reserved
   ROUTE_SETUP(0x01), // service setup up metadata frame
-  ADDRESS(0x02); // routing forward destination metadata frame
+  ROUTE_JOIN(0x02), // service route join metadata frame
+  ROUTE_REMOVE(0x03), // service route remove metadata frame
+  CLUSTER_INFO(0x04), // broker cluster information metadata frame
+  ADDRESS(0x05); // routing forward destination metadata frame
 
   private static RSocketRoutingFrameType[] FRAME_TYPES;
 
