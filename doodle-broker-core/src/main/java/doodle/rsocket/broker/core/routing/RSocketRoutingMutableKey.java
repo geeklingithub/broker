@@ -15,6 +15,8 @@
  */
 package doodle.rsocket.broker.core.routing;
 
+import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.valueOf;
+
 import java.util.Objects;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +36,7 @@ public class RSocketRoutingMutableKey implements RSocketRoutingKey {
   public RSocketRoutingMutableKey(String text) {
     if (StringUtils.hasLength(text)) {
       try {
-        this.wellKnownKey = RSocketRoutingWellKnownKey.valueOf(text.toUpperCase());
+        this.wellKnownKey = valueOf(text.toUpperCase());
       } catch (IllegalArgumentException ignored) {
         this.key = text;
       }

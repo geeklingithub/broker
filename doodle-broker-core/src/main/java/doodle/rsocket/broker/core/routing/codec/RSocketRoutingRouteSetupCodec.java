@@ -15,7 +15,14 @@
  */
 package doodle.rsocket.broker.core.routing.codec;
 
-import doodle.rsocket.broker.core.routing.RSocketRoutingFrameType;
+import static doodle.rsocket.broker.core.routing.RSocketRoutingFrameType.ROUTE_SETUP;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.ROUTE_ID_BITS;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.decodeRouteId;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.encodeRouteId;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingFrameHeaderCodec.BYTES;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingTagsCodec.decodeTag;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingTagsCodec.encodeTag;
+
 import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
 import doodle.rsocket.broker.core.routing.RSocketRoutingTags;
 import io.netty.buffer.ByteBuf;
@@ -30,21 +37,19 @@ public final class RSocketRoutingRouteSetupCodec {
       RSocketRoutingTags tags,
       int flags) {
     Objects.requireNonNull(routeId);
-    ByteBuf byteBuf =
-        RSocketRoutingFrameHeaderCodec.encode(
-            allocator, RSocketRoutingFrameType.ROUTE_SETUP, flags);
-    RSocketRoutingCodecUtils.encodeRouteId(byteBuf, routeId);
-    RSocketRoutingTagsCodec.encodeTag(byteBuf, tags);
+    ByteBuf byteBuf = RSocketRoutingFrameHeaderCodec.encode(allocator, ROUTE_SETUP, flags);
+    encodeRouteId(byteBuf, routeId);
+    encodeTag(byteBuf, tags);
     return byteBuf;
   }
 
   public static RSocketRoutingRouteId routeId(ByteBuf byteBuf) {
-    return RSocketRoutingCodecUtils.decodeRouteId(byteBuf, RSocketRoutingFrameHeaderCodec.BYTES);
+    return decodeRouteId(byteBuf, BYTES);
   }
 
   public static RSocketRoutingTags tags(ByteBuf byteBuf) {
-    int offset = RSocketRoutingFrameHeaderCodec.BYTES + RSocketRoutingCodecUtils.ROUTE_ID_BITS;
-    return RSocketRoutingTagsCodec.decodeTag(offset, byteBuf);
+    int offset = BYTES + ROUTE_ID_BITS;
+    return decodeTag(offset, byteBuf);
   }
 
   private RSocketRoutingRouteSetupCodec() {}

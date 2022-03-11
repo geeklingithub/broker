@@ -15,7 +15,9 @@
  */
 package doodle.rsocket.broker.core.routing;
 
-import doodle.rsocket.broker.core.routing.codec.RSocketRoutingAddressCodec;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingAddressCodec.FLAGS_U;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingAddressCodec.ROUTING_TYPE_MASK;
+
 import java.util.Objects;
 
 public class RSocketRoutingAddressBuilder
@@ -23,7 +25,7 @@ public class RSocketRoutingAddressBuilder
 
   // TODO: 2021/7/21 add metadata tags?
   private final RSocketRoutingRouteId originRouteId;
-  private int flags = RSocketRoutingAddressCodec.FLAGS_U; // default UNICAST
+  private int flags = FLAGS_U; // default UNICAST
 
   RSocketRoutingAddressBuilder(RSocketRoutingRouteId originRouteId) {
     this.originRouteId = Objects.requireNonNull(originRouteId);
@@ -36,7 +38,7 @@ public class RSocketRoutingAddressBuilder
 
   public RSocketRoutingAddressBuilder routingType(RSocketRoutingType routingType) {
     if (Objects.nonNull(routingType)) {
-      flags &= RSocketRoutingAddressCodec.ROUTING_TYPE_MASK;
+      flags &= ROUTING_TYPE_MASK;
       flags |= routingType.getFlag();
     }
     return this;

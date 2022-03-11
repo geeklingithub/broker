@@ -15,7 +15,9 @@
  */
 package doodle.rsocket.broker.core.routing;
 
-import doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupCodec;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupCodec.routeId;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupCodec.tags;
+
 import io.netty.buffer.ByteBuf;
 
 public final class RSocketRoutingRouteSetup extends RSocketRoutingFrame {
@@ -28,9 +30,7 @@ public final class RSocketRoutingRouteSetup extends RSocketRoutingFrame {
   }
 
   public static RSocketRoutingRouteSetup from(ByteBuf byteBuf) {
-    return from(RSocketRoutingRouteSetupCodec.routeId(byteBuf))
-        .with(RSocketRoutingRouteSetupCodec.tags(byteBuf))
-        .build();
+    return from(routeId(byteBuf)).with(tags(byteBuf)).build();
   }
 
   RSocketRoutingRouteSetup(RSocketRoutingRouteId routeId, RSocketRoutingTags tags) {

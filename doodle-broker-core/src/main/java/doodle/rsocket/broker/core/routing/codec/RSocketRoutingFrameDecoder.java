@@ -15,6 +15,9 @@
  */
 package doodle.rsocket.broker.core.routing.codec;
 
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingFrameHeaderCodec.flags;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingFrameHeaderCodec.frameType;
+
 import doodle.rsocket.broker.core.routing.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -55,8 +58,8 @@ public class RSocketRoutingFrameDecoder extends AbstractDecoder<RSocketRoutingFr
       DataBuffer buffer, ResolvableType targetType, MimeType mimeType, Map<String, Object> hints)
       throws DecodingException {
     ByteBuf byteBuf = asByteBuf(buffer);
-    int flags = RSocketRoutingFrameHeaderCodec.flags(byteBuf);
-    RSocketRoutingFrameType frameType = RSocketRoutingFrameHeaderCodec.frameType(byteBuf);
+    int flags = flags(byteBuf);
+    RSocketRoutingFrameType frameType = frameType(byteBuf);
     switch (frameType) {
       case ROUTE_SETUP:
         return RSocketRoutingRouteSetup.from(byteBuf);

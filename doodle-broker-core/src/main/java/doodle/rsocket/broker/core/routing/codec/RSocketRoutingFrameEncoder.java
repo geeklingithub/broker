@@ -15,6 +15,8 @@
  */
 package doodle.rsocket.broker.core.routing.codec;
 
+import static doodle.rsocket.broker.core.routing.RSocketRoutingMimeTypes.ROUTING_FRAME_MIME_TYPE;
+
 import doodle.rsocket.broker.core.routing.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -31,7 +33,7 @@ import reactor.core.publisher.Flux;
 public class RSocketRoutingFrameEncoder extends AbstractEncoder<RSocketRoutingFrame> {
 
   public RSocketRoutingFrameEncoder() {
-    super(RSocketRoutingMimeTypes.ROUTING_FRAME_MIME_TYPE);
+    super(ROUTING_FRAME_MIME_TYPE);
   }
 
   @Override

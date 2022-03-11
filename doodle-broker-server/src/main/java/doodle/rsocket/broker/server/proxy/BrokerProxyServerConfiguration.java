@@ -15,7 +15,8 @@
  */
 package doodle.rsocket.broker.server.proxy;
 
-import doodle.rsocket.broker.server.BrokerServerConstants;
+import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
+
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
 import doodle.rsocket.broker.server.proxy.context.BrokerProxyServerBootstrap;
 import doodle.rsocket.broker.server.proxy.rsocket.RSocketBrokerProxyServerFactory;
@@ -36,7 +37,7 @@ import reactor.netty.tcp.TcpServer;
 @SpringBootConfiguration(proxyBeanMethods = false)
 @ConditionalOnClass({TcpServerTransport.class, TcpServer.class})
 @AutoConfigureAfter(BrokerServerRoutingConfiguration.class)
-@ConditionalOnProperty(prefix = BrokerServerConstants.PREFIX + ".proxy", name = "port")
+@ConditionalOnProperty(prefix = PREFIX + ".proxy", name = "port")
 public class BrokerProxyServerConfiguration {
 
   @Bean
