@@ -77,6 +77,16 @@ public class RSocketRoutingFrameEncoder extends AbstractEncoder<RSocketRoutingFr
                 routeJoin.getTags(),
                 routingFrame.getFlags());
         break;
+      case ROUTE_REMOVE:
+        RSocketRoutingRouteRemove routeRemove = (RSocketRoutingRouteRemove) routingFrame;
+        encoded =
+            RSocketRoutingRouteRemoveCodec.encode(
+                allocator,
+                routeRemove.getBrokerId(),
+                routeRemove.getRouteId(),
+                routeRemove.getTimestamp(),
+                routingFrame.getFlags());
+        break;
       case ADDRESS:
         RSocketRoutingAddress address = (RSocketRoutingAddress) routingFrame;
         encoded =

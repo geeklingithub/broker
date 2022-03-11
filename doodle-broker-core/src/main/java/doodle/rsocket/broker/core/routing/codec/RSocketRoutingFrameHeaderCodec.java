@@ -15,6 +15,8 @@
  */
 package doodle.rsocket.broker.core.routing.codec;
 
+import static doodle.rsocket.broker.core.routing.RSocketRoutingFrameType.from;
+
 import doodle.rsocket.broker.core.routing.RSocketRoutingFrameType;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -51,7 +53,7 @@ public final class RSocketRoutingFrameHeaderCodec {
     byteBuf.markReaderIndex();
     short typeAndFlags = byteBuf.readShort();
     byteBuf.resetReaderIndex();
-    return RSocketRoutingFrameType.from(typeAndFlags >> FLAGS_BITS);
+    return from(typeAndFlags >> FLAGS_BITS);
   }
 
   private RSocketRoutingFrameHeaderCodec() {}

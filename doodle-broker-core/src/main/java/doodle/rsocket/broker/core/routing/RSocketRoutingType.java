@@ -15,13 +15,15 @@
  */
 package doodle.rsocket.broker.core.routing;
 
-import doodle.rsocket.broker.core.routing.codec.RSocketRoutingAddressCodec;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingAddressCodec.FLAGS_M;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingAddressCodec.FLAGS_U;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public enum RSocketRoutingType {
-  UNICAST(RSocketRoutingAddressCodec.FLAGS_U),
-  MULTICAST(RSocketRoutingAddressCodec.FLAGS_M);
+  UNICAST(FLAGS_U),
+  MULTICAST(FLAGS_M);
 
   private static final Map<Integer, RSocketRoutingType> ROUTING_TYPES;
 

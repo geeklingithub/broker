@@ -15,34 +15,28 @@
  */
 package doodle.rsocket.broker.core.routing.codec;
 
-import static doodle.rsocket.broker.core.routing.RSocketRoutingFrameType.ROUTE_JOIN;
-import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.*;
+import static doodle.rsocket.broker.core.routing.RSocketRoutingFrameType.ROUTE_REMOVE;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.ROUTE_ID_BYTES;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.decodeRouteId;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.encodeRouteId;
 import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingFrameHeaderCodec.BYTES;
-import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingTagsCodec.encodeTag;
 
 import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
-import doodle.rsocket.broker.core.routing.RSocketRoutingTags;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
-public class RSocketRoutingRouteJoinCodec {
-
-  private RSocketRoutingRouteJoinCodec() {}
+public final class RSocketRoutingRouteRemoveCodec {
 
   public static ByteBuf encode(
       ByteBufAllocator allocator,
       RSocketRoutingRouteId brokerId,
       RSocketRoutingRouteId routeId,
       long timestamp,
-      String serviceName,
-      RSocketRoutingTags tags,
       int flags) {
-    ByteBuf byteBuf = RSocketRoutingFrameHeaderCodec.encode(allocator, ROUTE_JOIN, flags);
+    ByteBuf byteBuf = RSocketRoutingFrameHeaderCodec.encode(allocator, ROUTE_REMOVE, flags);
     encodeRouteId(byteBuf, brokerId);
     encodeRouteId(byteBuf, routeId);
     byteBuf.writeLong(timestamp);
-    encodeByteString(byteBuf, serviceName);
-    encodeTag(byteBuf, tags);
     return byteBuf;
   }
 
@@ -60,14 +54,5 @@ public class RSocketRoutingRouteJoinCodec {
     return byteBuf.getLong(offset);
   }
 
-  public static String serviceName(ByteBuf byteBuf) {
-    int offset = BYTES + ROUTE_ID_BYTES + ROUTE_ID_BYTES + Long.BYTES;
-    return decodeByteString(byteBuf, offset);
-  }
-
-  public static RSocketRoutingTags tags(ByteBuf byteBuf) {
-    int offset = BYTES + ROUTE_ID_BYTES + ROUTE_ID_BYTES + Long.BYTES;
-    offset += decodeByteStringLength(byteBuf, offset);
-    return RSocketRoutingTagsCodec.decodeTag(offset, byteBuf);
-  }
+  private RSocketRoutingRouteRemoveCodec() {}
 }

@@ -23,7 +23,7 @@ import io.netty.buffer.ByteBufUtil;
 
 public final class RSocketRoutingCodecUtils {
 
-  public static final int ROUTE_ID_BITS = 16; // MSB(8bytes), LSB(8bytes)
+  public static final int ROUTE_ID_BYTES = 16; // MSB(8bytes), LSB(8bytes)
   private static final int UNSIGNED_BYTE_SIZE = 8;
   public static final int UNSIGNED_BYTE_MAX_SIZE = (1 << UNSIGNED_BYTE_SIZE) - 1;
 

@@ -63,6 +63,10 @@ public class RSocketRoutingFrameDecoder extends AbstractDecoder<RSocketRoutingFr
     switch (frameType) {
       case ROUTE_SETUP:
         return RSocketRoutingRouteSetup.from(byteBuf);
+      case ROUTE_JOIN:
+        return RSocketRoutingRouteJoin.from(byteBuf);
+      case ROUTE_REMOVE:
+        return RSocketRoutingRouteRemove.from(byteBuf);
       case ADDRESS:
         return RSocketRoutingAddress.from(byteBuf, flags);
     }
