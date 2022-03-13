@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.proxy.rsocket;
+package doodle.rsocket.broker.server.cluster.rsocket;
 
-import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_PROXY_SERVER_DAEMON_AWAIT_THREAD_NAME;
+import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_CLUSTER_SERVER_DAEMON_AWAIT_THREAD_NAME;
 
-import doodle.rsocket.broker.server.proxy.BrokerProxyServer;
+import doodle.rsocket.broker.server.cluster.BrokerClusterServer;
 import io.rsocket.transport.netty.server.CloseableChannel;
 import java.time.Duration;
 import java.util.Objects;
 import reactor.core.publisher.Mono;
 
-final class RSocketBrokerProxyServer implements BrokerProxyServer {
+final class RSocketBrokerClusterServer implements BrokerClusterServer {
 
   private final Mono<CloseableChannel> serverStarter;
   private final Duration lifecycleTimeout;
   private CloseableChannel serverChannel;
 
-  RSocketBrokerProxyServer(Mono<CloseableChannel> serverStarter, Duration lifecycleTimeout) {
+  RSocketBrokerClusterServer(Mono<CloseableChannel> serverStarter, Duration lifecycleTimeout) {
     this.serverStarter = Objects.requireNonNull(serverStarter);
     this.lifecycleTimeout = lifecycleTimeout;
   }
@@ -43,7 +43,7 @@ final class RSocketBrokerProxyServer implements BrokerProxyServer {
   private void startDaemonAwaitThread(CloseableChannel serverChannel) {
     Thread thread =
         new Thread(
-            () -> serverChannel.onClose().block(), RSOCKET_PROXY_SERVER_DAEMON_AWAIT_THREAD_NAME);
+            () -> serverChannel.onClose().block(), RSOCKET_CLUSTER_SERVER_DAEMON_AWAIT_THREAD_NAME);
     thread.setContextClassLoader(getClass().getClassLoader());
     thread.setDaemon(false);
     thread.start();

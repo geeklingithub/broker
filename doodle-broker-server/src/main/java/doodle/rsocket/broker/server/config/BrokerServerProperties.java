@@ -17,7 +17,7 @@ package doodle.rsocket.broker.server.config;
 
 import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
 
-import doodle.rsocket.broker.server.cluster.BrokerServerClusterProperties;
+import doodle.rsocket.broker.server.cluster.BrokerClusterServerProperties;
 import doodle.rsocket.broker.server.proxy.BrokerProxyServerProperties;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -33,7 +33,7 @@ public class BrokerServerProperties {
   private final BrokerServerRoutingProperties routing = new BrokerServerRoutingProperties();
 
   @NestedConfigurationProperty
-  private final BrokerServerClusterProperties cluster = new BrokerServerClusterProperties();
+  private final BrokerClusterServerProperties cluster = new BrokerClusterServerProperties();
 
   public BrokerProxyServerProperties getProxy() {
     return proxy;
@@ -43,7 +43,7 @@ public class BrokerServerProperties {
     return routing;
   }
 
-  public BrokerServerClusterProperties getCluster() {
+  public BrokerClusterServerProperties getCluster() {
     return cluster;
   }
 }

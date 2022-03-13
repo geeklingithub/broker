@@ -15,6 +15,25 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
-public class BrokerServerClusterProperties {
-  // TODO: 2022/3/11 add custer properties
+import java.net.InetAddress;
+
+public class BrokerClusterServerProperties {
+  private InetAddress host;
+  private int port;
+
+  public InetAddress getHost() {
+    return host;
+  }
+
+  public void setHost(InetAddress host) {
+    this.host = host;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
 }

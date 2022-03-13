@@ -21,6 +21,9 @@ public final class BrokerServerConstants {
   public static final String RSOCKET_PROXY_SERVER_DAEMON_AWAIT_THREAD_NAME =
       "RSocketBrokerProxyServer";
 
+  public static final String RSOCKET_CLUSTER_SERVER_DAEMON_AWAIT_THREAD_NAME =
+      "RSocketBrokerClusterServer";
+
   public static final String RSOCKET_SERVER_ROUTING_ROUND_ROBIN_LB_STRATEGY = "RoundRobin";
 
   public static final String RSOCKET_SERVER_ROUTING_DEFAULT_LB_STRATEGY =

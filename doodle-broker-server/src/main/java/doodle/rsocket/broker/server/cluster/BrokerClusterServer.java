@@ -15,19 +15,6 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.messaging.rsocket.annotation.ConnectMapping;
-import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Mono;
+import org.springframework.context.SmartLifecycle;
 
-@Controller
-public class BrokerServerClusterController {
-  private static final Logger logger = LoggerFactory.getLogger(BrokerServerClusterController.class);
-
-  @ConnectMapping
-  public Mono<Void> onConnect() {
-    // TODO: 2022/3/11 handle broker connect
-    return Mono.empty();
-  }
-}
+public interface BrokerClusterServer extends SmartLifecycle {}

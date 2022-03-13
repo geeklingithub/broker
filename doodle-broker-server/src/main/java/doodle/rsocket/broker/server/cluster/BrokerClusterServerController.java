@@ -15,9 +15,19 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
-import org.springframework.boot.SpringBootConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.messaging.rsocket.annotation.ConnectMapping;
+import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Mono;
 
-@SpringBootConfiguration(proxyBeanMethods = false)
-public class BrokerServerClusterConfiguration {
-  // TODO: 2022/3/11 initialize cluster server and routing table
+@Controller
+public class BrokerClusterServerController {
+  private static final Logger logger = LoggerFactory.getLogger(BrokerClusterServerController.class);
+
+  @ConnectMapping
+  public Mono<Void> onConnect() {
+    // TODO: 2022/3/11 handle broker connect
+    return Mono.empty();
+  }
 }
