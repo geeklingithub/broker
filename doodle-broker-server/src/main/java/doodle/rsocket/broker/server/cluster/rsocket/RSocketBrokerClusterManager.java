@@ -39,6 +39,12 @@ public class RSocketBrokerClusterManager {
   private Disposable onConnect(BrokerClusterNodeProperties clusterNode) {
     logger.info("Starting connect to broker cluster node: {}", clusterNode);
     // TODO: 3/13/22 create RSocketRequester connection to broker cluster
+
+    // steps:
+    //      1: create rsocket requester
+    //      2: request remote BROKER-INFO through rsocket request
+    //      3: create routing rsocket to broker cluster
+
     return null;
   }
 

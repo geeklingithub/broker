@@ -15,6 +15,8 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
+import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER_BROKER_INFO;
+
 import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
 import doodle.rsocket.broker.core.routing.RSocketRoutingFrame;
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
@@ -22,6 +24,7 @@ import java.time.Duration;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;
@@ -68,5 +71,20 @@ public class BrokerClusterServerController {
 
     connectEvents.tryEmitNext(brokerInfo); // emits event when connection established
     return Mono.empty();
+  }
+
+  @MessageMapping(REQUEST_CLUSTER_BROKER_INFO)
+  public Mono<RSocketRoutingBrokerInfo> handleBrokerInfo(
+      RSocketRoutingBrokerInfo clientBrokerInfo, RSocketRequester rSocketRequester) {
+    logger.info("Received BROKER-INFO request from: {}", clientBrokerInfo);
+
+    // TODO: 3/13/22 handle broker info request
+
+    return Mono.empty();
+  }
+
+  private RSocketRoutingBrokerInfo getLocalBrokerInfo() {
+    // TODO: 3/13/22 get local broker info
+    return null;
   }
 }
