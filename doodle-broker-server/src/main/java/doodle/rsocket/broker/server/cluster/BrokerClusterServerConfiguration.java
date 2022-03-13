@@ -68,6 +68,7 @@ public class BrokerClusterServerConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
+  // FIXME: 3/13/22 is cluster server needed? use proxy server indeed?
   public BrokerClusterServerBootstrap brokerClusterServerBootstrap(
       BrokerClusterServerFactory serverFactory, BrokerServerRoutingAcceptor routingAcceptor) {
     return new BrokerClusterServerBootstrap(serverFactory, routingAcceptor);
