@@ -4,3 +4,5 @@ doodle:
       server:
         proxy:
           port: 8001
+        cluster:
+          port: 9001

@@ -21,8 +21,6 @@ import doodle.rsocket.broker.server.cluster.context.BrokerClusterServerBootstrap
 import doodle.rsocket.broker.server.cluster.rsocket.RSocketBrokerClusterServerFactory;
 import doodle.rsocket.broker.server.cluster.rsocket.RSocketBrokerClusterServerFactoryCustomizer;
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
-import doodle.rsocket.broker.server.routing.BrokerServerRoutingAcceptor;
-import doodle.rsocket.broker.server.routing.BrokerServerRoutingConfiguration;
 import io.rsocket.transport.netty.server.TcpServerTransport;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringBootConfiguration;
@@ -36,7 +34,7 @@ import reactor.netty.tcp.TcpServer;
 
 @SpringBootConfiguration(proxyBeanMethods = false)
 @ConditionalOnClass({TcpServerTransport.class, TcpServer.class})
-@AutoConfigureAfter(BrokerServerRoutingConfiguration.class)
+@AutoConfigureAfter(BrokerCusterServerMessagingConfiguration.class)
 @ConditionalOnProperty(prefix = PREFIX + ".cluster", name = "port")
 public class BrokerClusterServerConfiguration {
 
@@ -68,9 +66,8 @@ public class BrokerClusterServerConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  // FIXME: 3/13/22 is cluster server needed? use proxy server indeed?
   public BrokerClusterServerBootstrap brokerClusterServerBootstrap(
-      BrokerClusterServerFactory serverFactory, BrokerServerRoutingAcceptor routingAcceptor) {
-    return new BrokerClusterServerBootstrap(serverFactory, routingAcceptor);
+      BrokerClusterServerFactory serverFactory, BrokerClusterServerAcceptor serverAcceptor) {
+    return new BrokerClusterServerBootstrap(serverFactory, serverAcceptor);
   }
 }

@@ -16,6 +16,7 @@
 package doodle.rsocket.broker.server.config;
 
 import doodle.rsocket.broker.server.cluster.BrokerClusterServerConfiguration;
+import doodle.rsocket.broker.server.cluster.BrokerCusterServerMessagingConfiguration;
 import doodle.rsocket.broker.server.proxy.BrokerProxyServerConfiguration;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingConfiguration;
 import org.springframework.boot.SpringBootConfiguration;
@@ -29,6 +30,7 @@ import org.springframework.context.annotation.Import;
 @Import({
   BrokerServerRoutingConfiguration.class,
   BrokerProxyServerConfiguration.class,
+  BrokerCusterServerMessagingConfiguration.class,
   BrokerClusterServerConfiguration.class
 })
 public class BrokerServerAutoConfiguration {}
