@@ -15,19 +15,58 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
+import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
+import doodle.rsocket.broker.core.routing.RSocketRoutingFrame;
+import doodle.rsocket.broker.server.config.BrokerServerProperties;
+import java.time.Duration;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 @Controller
 public class BrokerClusterServerController {
   private static final Logger logger = LoggerFactory.getLogger(BrokerClusterServerController.class);
+  private final BrokerServerProperties properties;
+
+  private final Consumer<BrokerClusterNodeProperties>
+      connectionEventPublisher; // for updating broker info
+
+  private final Sinks.Many<RSocketRoutingBrokerInfo> connectEvents =
+      Sinks.many().multicast().directBestEffort(); // emits element with best effort
+
+  public BrokerClusterServerController(
+      BrokerServerProperties properties,
+      Consumer<BrokerClusterNodeProperties> connectionEventPublisher) {
+    this.properties = properties;
+    this.connectionEventPublisher = connectionEventPublisher;
+
+    connectEvents
+        .asFlux()
+        .delayElements(Duration.ofSeconds(1))
+        .flatMap(this::onConnectEvent)
+        .subscribe();
+  }
+
+  private Mono<RSocketRoutingBrokerInfo> onConnectEvent(RSocketRoutingBrokerInfo brokerInfo) {
+    // TODO: 3/13/22 handle connect event
+    return Mono.empty();
+  }
 
   @ConnectMapping
-  public Mono<Void> onConnect() {
-    // TODO: 2022/3/11 handle broker connect
+  public Mono<Void> onConnect(RSocketRoutingFrame routingFrame, RSocketRequester rSocketRequester) {
+    if (!(routingFrame instanceof RSocketRoutingBrokerInfo)) {
+      return Mono.empty();
+    }
+    RSocketRoutingBrokerInfo brokerInfo = (RSocketRoutingBrokerInfo) routingFrame;
+
+    // TODO: 3/13/22 handle connection
+
+    connectEvents.tryEmitNext(brokerInfo); // emits event when connection established
     return Mono.empty();
   }
 }

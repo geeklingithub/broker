@@ -18,6 +18,7 @@ package doodle.rsocket.broker.server.cluster;
 import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
 
 import doodle.rsocket.broker.server.cluster.context.BrokerClusterServerBootstrap;
+import doodle.rsocket.broker.server.cluster.rsocket.RSocketBrokerClusterManager;
 import doodle.rsocket.broker.server.cluster.rsocket.RSocketBrokerClusterServerFactory;
 import doodle.rsocket.broker.server.cluster.rsocket.RSocketBrokerClusterServerFactoryCustomizer;
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
@@ -40,8 +41,18 @@ public class BrokerClusterServerConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public BrokerClusterServerController brokerClusterServerController() {
-    return new BrokerClusterServerController();
+  public RSocketBrokerClusterManager rSocketBrokerClusterManager(
+      BrokerServerProperties properties) {
+    return new RSocketBrokerClusterManager(properties);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public BrokerClusterServerController brokerClusterServerController(
+      BrokerServerProperties properties, RSocketBrokerClusterManager clusterManager) {
+    return new BrokerClusterServerController(
+        properties,
+        clusterNode -> clusterManager.getConnectionEventPublisher().tryEmitNext(clusterNode));
   }
 
   @Bean
