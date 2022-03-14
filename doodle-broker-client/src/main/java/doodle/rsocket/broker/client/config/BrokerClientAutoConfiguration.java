@@ -77,7 +77,7 @@ public class BrokerClientAutoConfiguration {
       RSocketStrategies strategies) {
 
     RSocketRoutingRouteSetupBuilder routeSetup =
-        RSocketRoutingRouteSetup.from(properties.getRouteId());
+        RSocketRoutingRouteSetup.from(properties.getRouteId(), properties.getServiceName());
 
     properties
         .getTags()

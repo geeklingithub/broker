@@ -30,6 +30,8 @@ public class BrokerClientProperties {
 
   private RSocketRoutingRouteId routeId = random();
 
+  private String serviceName;
+
   private final Map<RSocketRoutingMutableKey, String> tags = new LinkedHashMap<>();
 
   private MimeType dataMimeType;
@@ -42,6 +44,14 @@ public class BrokerClientProperties {
 
   public void setRouteId(RSocketRoutingRouteId routeId) {
     this.routeId = routeId;
+  }
+
+  public String getServiceName() {
+    return serviceName;
+  }
+
+  public void setServiceName(String serviceName) {
+    this.serviceName = serviceName;
   }
 
   public Map<RSocketRoutingMutableKey, String> getTags() {
@@ -64,6 +74,7 @@ public class BrokerClientProperties {
   public String toString() {
     return new StringJoiner(", ", BrokerClientProperties.class.getSimpleName() + "[", "]")
         .add("routeId=" + routeId)
+        .add("serviceName='" + serviceName + "'")
         .add("tags=" + tags)
         .add("dataMimeType=" + dataMimeType)
         .add("brokers=" + brokers)
