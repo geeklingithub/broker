@@ -16,24 +16,22 @@
 package doodle.rsocket.broker.client.config;
 
 import static doodle.rsocket.broker.client.BrokerClientConstants.*;
+import static doodle.rsocket.broker.core.routing.RSocketRoutingRouteId.random;
 
-import doodle.rsocket.broker.client.BrokerServerTarget;
 import doodle.rsocket.broker.core.routing.RSocketRoutingMutableKey;
 import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.util.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(PREFIX)
 public class BrokerClientProperties {
 
-  private RSocketRoutingRouteId routeId = RSocketRoutingRouteId.random();
+  private RSocketRoutingRouteId routeId = random();
 
   private final Map<RSocketRoutingMutableKey, String> tags = new LinkedHashMap<>();
 
-  private final List<BrokerServerTarget> serverTargets = new ArrayList<>();
+  private final List<URI> brokers = new ArrayList<>();
 
   public RSocketRoutingRouteId getRouteId() {
     return routeId;
@@ -47,7 +45,16 @@ public class BrokerClientProperties {
     return tags;
   }
 
-  public List<BrokerServerTarget> getServerTargets() {
-    return serverTargets;
+  public List<URI> getBrokers() {
+    return brokers;
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", BrokerClientProperties.class.getSimpleName() + "[", "]")
+        .add("routeId=" + routeId)
+        .add("tags=" + tags)
+        .add("brokers=" + brokers)
+        .toString();
   }
 }
