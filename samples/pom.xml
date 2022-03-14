@@ -20,6 +20,7 @@
   </properties>
 
   <modules>
+    <module>broker-app</module>
     <module>broker-server</module>
   </modules>
 

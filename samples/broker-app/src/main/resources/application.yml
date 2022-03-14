@@ -1,0 +1,3 @@
+doodle.rsocket.broker.client:
+  brokers:
+    - tcp://localhost:8001

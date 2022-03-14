@@ -1,9 +1,6 @@
-doodle:
-  rsocket:
-    broker:
-      server:
-        proxy:
-          enabled: true
-          port: 8001
-        cluster:
-          port: 9001
+doodle.rsocket.broker.server:
+  proxy:
+    enabled: true
+    port: 8001
+  cluster:
+    port: 9001
