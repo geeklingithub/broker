@@ -18,6 +18,8 @@ package doodle.rsocket.broker.core.routing;
 import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.valueOf;
 
 import java.util.Objects;
+import java.util.StringJoiner;
+
 import org.springframework.util.StringUtils;
 
 public class RSocketRoutingMutableKey implements RSocketRoutingKey {
@@ -76,12 +78,9 @@ public class RSocketRoutingMutableKey implements RSocketRoutingKey {
 
   @Override
   public String toString() {
-    return "RSocketRoutingMutableKey{"
-        + "wellKnownKey="
-        + wellKnownKey
-        + ", key='"
-        + key
-        + '\''
-        + '}';
+    return new StringJoiner(", ", RSocketRoutingMutableKey.class.getSimpleName() + "[", "]")
+        .add("wellKnownKey=" + wellKnownKey)
+        .add("key='" + key + "'")
+        .toString();
   }
 }
