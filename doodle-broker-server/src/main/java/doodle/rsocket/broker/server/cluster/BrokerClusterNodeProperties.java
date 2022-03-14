@@ -15,4 +15,27 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
-public class BrokerClusterNodeProperties {}
+import java.net.URI;
+
+public class BrokerClusterNodeProperties {
+  private URI proxy;
+  private URI cluster;
+
+  public URI getProxy() {
+    return proxy;
+  }
+
+  public BrokerClusterNodeProperties setProxy(URI proxy) {
+    this.proxy = proxy;
+    return this;
+  }
+
+  public URI getCluster() {
+    return cluster;
+  }
+
+  public BrokerClusterNodeProperties setCluster(URI cluster) {
+    this.cluster = cluster;
+    return this;
+  }
+}

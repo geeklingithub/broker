@@ -15,8 +15,10 @@
  */
 package doodle.rsocket.broker.server.config;
 
+import static doodle.rsocket.broker.core.routing.RSocketRoutingRouteId.random;
 import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
 
+import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
 import doodle.rsocket.broker.server.cluster.BrokerClusterServerProperties;
 import doodle.rsocket.broker.server.proxy.BrokerProxyServerProperties;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingProperties;
@@ -26,6 +28,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @ConfigurationProperties(PREFIX)
 public class BrokerServerProperties {
 
+  private RSocketRoutingRouteId brokerId = random();
+
   @NestedConfigurationProperty
   private final BrokerProxyServerProperties proxy = new BrokerProxyServerProperties();
 
@@ -34,6 +38,15 @@ public class BrokerServerProperties {
 
   @NestedConfigurationProperty
   private final BrokerClusterServerProperties cluster = new BrokerClusterServerProperties();
+
+  public RSocketRoutingRouteId getBrokerId() {
+    return brokerId;
+  }
+
+  public BrokerServerProperties setBrokerId(RSocketRoutingRouteId brokerId) {
+    this.brokerId = brokerId;
+    return this;
+  }
 
   public BrokerProxyServerProperties getProxy() {
     return proxy;

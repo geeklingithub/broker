@@ -16,16 +16,29 @@
 package doodle.rsocket.broker.server.cluster;
 
 import java.net.InetAddress;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 public class BrokerClusterServerProperties {
+
+  private URI uri = URI.create("tcp://localhost:9001");
+
   private InetAddress host;
   private int port;
 
   @NestedConfigurationProperty
   private final List<BrokerClusterNodeProperties> nodes = new ArrayList<>();
+
+  public URI getUri() {
+    return uri;
+  }
+
+  public BrokerClusterServerProperties setUri(URI uri) {
+    this.uri = uri;
+    return this;
+  }
 
   public InetAddress getHost() {
     return host;
