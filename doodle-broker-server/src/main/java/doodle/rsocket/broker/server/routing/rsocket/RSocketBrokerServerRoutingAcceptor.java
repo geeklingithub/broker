@@ -96,7 +96,7 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
     Flux.firstWithSignal( // rsocket combo close
             receivingRSocket.onClose(),
             sendingSocket.onClose()) // any rsocket closed will emit signal
-        .doFinally(__ -> doCleanup.run())
+        .doFinally(s -> doCleanup.run())
         .subscribe();
     return Mono.just(receivingRSocket);
   }

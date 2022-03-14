@@ -23,6 +23,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import reactor.core.publisher.Hooks;
 
 @EnableBrokerServer
 @SpringBootApplication
@@ -40,6 +41,9 @@ public class SampleBrokerServerApplication {
   }
 
   public static void main(String[] args) {
+    // a simple server will throw exception after client disconnected
+    // https://github.com/rsocket/rsocket-java/issues/1018
+    Hooks.onErrorDropped(__ -> {});
     SpringApplication.run(SampleBrokerServerApplication.class, args);
   }
 }

@@ -16,7 +16,6 @@
 package doodle.samples.rsocket.broker.app;
 
 import doodle.rsocket.broker.client.EnableBrokerClient;
-import java.util.concurrent.CountDownLatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -28,9 +27,7 @@ public class SampleBrokerApplication {
 
   private static final Logger logger = LoggerFactory.getLogger(SampleBrokerApplication.class);
 
-  public static void main(String[] args) throws InterruptedException {
-    final CountDownLatch countDownLatch = new CountDownLatch(1);
+  public static void main(String[] args) {
     SpringApplication.run(SampleBrokerApplication.class, args);
-    countDownLatch.await();
   }
 }
