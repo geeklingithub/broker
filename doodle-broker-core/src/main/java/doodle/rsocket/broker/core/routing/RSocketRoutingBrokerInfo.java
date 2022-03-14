@@ -29,16 +29,12 @@ public class RSocketRoutingBrokerInfo extends RSocketRoutingFrame {
   private final long timestamp;
   private RSocketRoutingTags tags;
 
-  public static RSocketRoutingBrokerInfoBuilder builder() {
-    return new RSocketRoutingBrokerInfoBuilder();
+  public static RSocketRoutingBrokerInfo from(ByteBuf byteBuf) {
+    return from(brokerId(byteBuf)).timestamp(timestamp(byteBuf)).with(tags(byteBuf)).build();
   }
 
-  public static RSocketRoutingBrokerInfo from(ByteBuf byteBuf) {
-    return builder()
-        .brokerId(brokerId(byteBuf))
-        .timestamp(timestamp(byteBuf))
-        .with(tags(byteBuf))
-        .build();
+  public static RSocketRoutingBrokerInfoBuilder from(RSocketRoutingRouteId brokerId) {
+    return new RSocketRoutingBrokerInfoBuilder(brokerId);
   }
 
   public RSocketRoutingBrokerInfo(

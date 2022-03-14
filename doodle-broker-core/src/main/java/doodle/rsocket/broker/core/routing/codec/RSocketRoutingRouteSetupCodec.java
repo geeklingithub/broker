@@ -16,9 +16,7 @@
 package doodle.rsocket.broker.core.routing.codec;
 
 import static doodle.rsocket.broker.core.routing.RSocketRoutingFrameType.ROUTE_SETUP;
-import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.ROUTE_ID_BYTES;
-import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.decodeRouteId;
-import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.encodeRouteId;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingCodecUtils.*;
 import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingFrameHeaderCodec.BYTES;
 import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingTagsCodec.decodeTag;
 import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingTagsCodec.encodeTag;
@@ -47,8 +45,14 @@ public final class RSocketRoutingRouteSetupCodec {
     return decodeRouteId(byteBuf, BYTES);
   }
 
+  public static String serviceName(ByteBuf byteBuf) {
+    int offset = BYTES + ROUTE_ID_BYTES;
+    return decodeByteString(byteBuf, offset);
+  }
+
   public static RSocketRoutingTags tags(ByteBuf byteBuf) {
     int offset = BYTES + ROUTE_ID_BYTES;
+    offset += decodeByteStringLength(byteBuf, offset);
     return decodeTag(offset, byteBuf);
   }
 

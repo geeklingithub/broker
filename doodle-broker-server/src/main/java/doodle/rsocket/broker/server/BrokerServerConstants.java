@@ -27,7 +27,11 @@ public final class BrokerServerConstants {
   public static final String RSOCKET_SERVER_ROUTING_DEFAULT_LB_STRATEGY =
       System.getProperty(
           PREFIX + ".routing.loadbalance-strategy", RSOCKET_SERVER_ROUTING_ROUND_ROBIN_LB_STRATEGY);
+
   public static final String REQUEST_CLUSTER_BROKER_INFO = "broker-cluster.broker-info";
+
+  public static final String REQUEST_CLUSTER_REMOTE_BROKER_INFO =
+      "broker-cluster.remote-broker-info";
 
   private BrokerServerConstants() {}
 }

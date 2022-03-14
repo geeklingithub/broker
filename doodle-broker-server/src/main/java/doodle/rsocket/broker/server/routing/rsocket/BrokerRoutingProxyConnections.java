@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.core.routing;
+package doodle.rsocket.broker.server.routing.rsocket;
 
-public class RSocketRoutingBrokerInfoBuilder
-    extends RSocketRoutingTagsBuilder<RSocketRoutingBrokerInfoBuilder> {
-  private final RSocketRoutingRouteId brokerId;
-  private long timestamp;
+import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
+import io.rsocket.RSocket;
+import reactor.core.publisher.Mono;
 
-  public RSocketRoutingBrokerInfoBuilder(RSocketRoutingRouteId brokerId) {
-    this.brokerId = brokerId;
+public class BrokerRoutingProxyConnections extends BrokerRoutingConnections<RSocket> {
+
+  @Override
+  public RSocket put(RSocketRoutingBrokerInfo brokerInfo, RSocket connection) {
+    return super.put(brokerInfo, connection);
   }
 
-  public RSocketRoutingBrokerInfoBuilder timestamp(long timestamp) {
-    this.timestamp = timestamp;
-    return this;
-  }
-
-  public RSocketRoutingBrokerInfo build() {
-    return new RSocketRoutingBrokerInfo(brokerId, timestamp, buildTags());
+  @Override
+  protected Mono<RSocket> getRSocket(RSocket rSocket) {
+    return Mono.just(rSocket);
   }
 }

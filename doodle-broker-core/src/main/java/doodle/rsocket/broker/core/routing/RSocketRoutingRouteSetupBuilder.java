@@ -21,12 +21,14 @@ public class RSocketRoutingRouteSetupBuilder
     extends RSocketRoutingTagsBuilder<RSocketRoutingRouteSetupBuilder> {
 
   private final RSocketRoutingRouteId routeId;
+  private final String serviceName;
 
-  RSocketRoutingRouteSetupBuilder(RSocketRoutingRouteId routeId) {
+  RSocketRoutingRouteSetupBuilder(RSocketRoutingRouteId routeId, String serviceName) {
     this.routeId = Objects.requireNonNull(routeId);
+    this.serviceName = Objects.requireNonNull(serviceName);
   }
 
   public RSocketRoutingRouteSetup build() {
-    return new RSocketRoutingRouteSetup(this.routeId, buildTags());
+    return new RSocketRoutingRouteSetup(this.routeId, serviceName, buildTags());
   }
 }

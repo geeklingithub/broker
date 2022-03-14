@@ -16,10 +16,13 @@
 package doodle.rsocket.broker.server.cluster;
 
 import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER_BROKER_INFO;
+import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER_REMOTE_BROKER_INFO;
 
 import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
 import doodle.rsocket.broker.core.routing.RSocketRoutingFrame;
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
+import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingClusterConnections;
+import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketTable;
 import java.time.Duration;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
@@ -39,14 +42,21 @@ public class BrokerClusterServerController {
   private final Consumer<BrokerClusterNodeProperties>
       connectionEventPublisher; // for updating broker info
 
+  private final BrokerRoutingClusterConnections clusterConnections;
+  private final BrokerRoutingRSocketTable routingTable;
+
   private final Sinks.Many<RSocketRoutingBrokerInfo> connectEvents =
       Sinks.many().multicast().directBestEffort(); // emits element with best effort
 
   public BrokerClusterServerController(
       BrokerServerProperties properties,
-      Consumer<BrokerClusterNodeProperties> connectionEventPublisher) {
+      Consumer<BrokerClusterNodeProperties> connectionEventPublisher,
+      BrokerRoutingClusterConnections clusterConnections,
+      BrokerRoutingRSocketTable routingTable) {
     this.properties = properties;
     this.connectionEventPublisher = connectionEventPublisher;
+    this.clusterConnections = clusterConnections;
+    this.routingTable = routingTable;
 
     connectEvents
         .asFlux()
@@ -56,8 +66,18 @@ public class BrokerClusterServerController {
   }
 
   private Mono<RSocketRoutingBrokerInfo> onConnectEvent(RSocketRoutingBrokerInfo brokerInfo) {
-    // TODO: 3/13/22 handle connect event
-    return Mono.empty();
+    RSocketRequester requester = clusterConnections.get(brokerInfo);
+    return sendBrokerInfo(requester, brokerInfo);
+  }
+
+  private Mono<RSocketRoutingBrokerInfo> sendBrokerInfo(
+      RSocketRequester requester, RSocketRoutingBrokerInfo brokerInfo) {
+    RSocketRoutingBrokerInfo localBrokerInfo = getLocalBrokerInfo();
+    return requester
+        .route(REQUEST_CLUSTER_BROKER_INFO)
+        .data(localBrokerInfo)
+        .retrieveMono(RSocketRoutingBrokerInfo.class)
+        .map(bi -> localBrokerInfo);
   }
 
   @ConnectMapping
@@ -73,10 +93,18 @@ public class BrokerClusterServerController {
     return Mono.empty();
   }
 
+  @MessageMapping(REQUEST_CLUSTER_REMOTE_BROKER_INFO)
+  public void handleBrokerInfoUpdate(RSocketRoutingBrokerInfo brokerInfo) {
+    logger.info("Received remote BrokerInfo {}", brokerInfo);
+
+    BrokerClusterNodeProperties clusterNode = new BrokerClusterNodeProperties();
+    connectionEventPublisher.accept(clusterNode);
+  }
+
   @MessageMapping(REQUEST_CLUSTER_BROKER_INFO)
   public Mono<RSocketRoutingBrokerInfo> handleBrokerInfo(
       RSocketRoutingBrokerInfo clientBrokerInfo, RSocketRequester rSocketRequester) {
-    logger.info("Received BROKER-INFO request from: {}", clientBrokerInfo);
+    logger.info("Received BrokerInfo request from: {}", clientBrokerInfo);
 
     // TODO: 3/13/22 handle broker info request
 
@@ -84,7 +112,6 @@ public class BrokerClusterServerController {
   }
 
   private RSocketRoutingBrokerInfo getLocalBrokerInfo() {
-    // TODO: 3/13/22 get local broker info
     return null;
   }
 }

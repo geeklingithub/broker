@@ -17,8 +17,10 @@ package doodle.rsocket.broker.server.routing;
 
 import static doodle.rsocket.broker.core.routing.RSocketRoutingMimeTypes.ROUTING_FRAME_METADATA_KEY;
 import static doodle.rsocket.broker.core.routing.RSocketRoutingMimeTypes.ROUTING_FRAME_MIME_TYPE;
+import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER_REMOTE_BROKER_INFO;
 import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_SERVER_ROUTING_ROUND_ROBIN_LB_STRATEGY;
 
+import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
 import doodle.rsocket.broker.core.routing.RSocketRoutingFrame;
 import doodle.rsocket.broker.core.routing.config.BrokerRSocketStrategiesAutoConfiguration;
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
@@ -28,10 +30,7 @@ import doodle.rsocket.broker.server.core.rsocket.BrokerCompositeRSocketLocator;
 import doodle.rsocket.broker.server.core.rsocket.BrokerMulticastRSocketLocator;
 import doodle.rsocket.broker.server.core.rsocket.BrokerRSocketLocator;
 import doodle.rsocket.broker.server.core.rsocket.BrokerUnicastRSocketLocator;
-import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingAddressExtractor;
-import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketFactory;
-import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketIndex;
-import doodle.rsocket.broker.server.routing.rsocket.RSocketBrokerServerRoutingAcceptor;
+import doodle.rsocket.broker.server.routing.rsocket.*;
 import io.rsocket.loadbalance.LoadbalanceStrategy;
 import io.rsocket.loadbalance.RoundRobinLoadbalanceStrategy;
 import java.util.Map;
@@ -48,6 +47,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.messaging.rsocket.DefaultMetadataExtractor;
 import org.springframework.messaging.rsocket.MetadataExtractor;
 import org.springframework.messaging.rsocket.RSocketStrategies;
+import reactor.core.publisher.Flux;
 
 @SpringBootConfiguration(proxyBeanMethods = false)
 @AutoConfigureAfter({
@@ -83,9 +83,56 @@ public class BrokerServerRoutingConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
+  public BrokerRoutingRSocketTable brokerRoutingRSocketTable() {
+    return new BrokerRoutingRSocketTable();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public BrokerRoutingProxyConnections brokerRoutingProxyConnections() {
+    return new BrokerRoutingProxyConnections();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public BrokerRoutingClusterConnections brokerRoutingClusterConnections(
+      BrokerServerProperties properties) {
+    BrokerRoutingClusterConnections clusterConnections = new BrokerRoutingClusterConnections();
+    clusterConnections
+        .joinEvents()
+        .flatMap(
+            newEntry ->
+                Flux.fromIterable(clusterConnections.entries())
+                    .filter(
+                        existingEntry ->
+                            !existingEntry
+                                    .getBrokerInfo()
+                                    .getBrokerId()
+                                    .equals(newEntry.getBrokerInfo().getBrokerId())
+                                && !newEntry
+                                    .getBrokerInfo()
+                                    .getBrokerId()
+                                    .equals(properties.getBrokerId()))
+                    .flatMap(
+                        entry ->
+                            entry
+                                .getValue()
+                                .route(REQUEST_CLUSTER_REMOTE_BROKER_INFO)
+                                .data(newEntry.getBrokerInfo())
+                                .retrieveMono(RSocketRoutingBrokerInfo.class)))
+        .subscribe();
+    return clusterConnections;
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
   public BrokerCombinedRSocketQuery brokerCombinedRSocketQuery(
-      BrokerRoutingRSocketIndex routingIndex) {
-    return new BrokerCombinedRSocketQuery(routingIndex);
+      BrokerServerProperties properties,
+      BrokerRoutingRSocketIndex routingIndex,
+      BrokerRoutingRSocketTable routingTable,
+      BrokerRoutingProxyConnections proxyConnections) {
+    return new BrokerCombinedRSocketQuery(
+        properties.getBrokerId(), routingIndex, routingTable, proxyConnections::get);
   }
 
   @Bean
@@ -135,10 +182,16 @@ public class BrokerServerRoutingConfiguration {
   @Bean
   @ConditionalOnMissingBean
   public BrokerServerRoutingAcceptor brokerServerRoutingAcceptor(
+      BrokerServerProperties properties,
       BrokerRoutingRSocketIndex routingIndex,
+      BrokerRoutingRSocketTable routingTable,
       BrokerRoutingRSocketFactory routingRSocketFactory,
       RSocketStrategies rSocketStrategies) {
     return new RSocketBrokerServerRoutingAcceptor(
-        routingIndex, routingRSocketFactory, rSocketStrategies.metadataExtractor());
+        properties.getBrokerId(),
+        routingIndex,
+        routingTable,
+        routingRSocketFactory,
+        rSocketStrategies.metadataExtractor());
   }
 }

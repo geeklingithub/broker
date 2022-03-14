@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.core.routing;
+package doodle.rsocket.broker.server.routing.rsocket;
 
-public class RSocketRoutingBrokerInfoBuilder
-    extends RSocketRoutingTagsBuilder<RSocketRoutingBrokerInfoBuilder> {
-  private final RSocketRoutingRouteId brokerId;
-  private long timestamp;
+import io.rsocket.RSocket;
+import java.util.Objects;
+import org.springframework.messaging.rsocket.RSocketRequester;
+import reactor.core.publisher.Mono;
 
-  public RSocketRoutingBrokerInfoBuilder(RSocketRoutingRouteId brokerId) {
-    this.brokerId = brokerId;
-  }
+public class BrokerRoutingClusterConnections extends BrokerRoutingConnections<RSocketRequester> {
 
-  public RSocketRoutingBrokerInfoBuilder timestamp(long timestamp) {
-    this.timestamp = timestamp;
-    return this;
-  }
-
-  public RSocketRoutingBrokerInfo build() {
-    return new RSocketRoutingBrokerInfo(brokerId, timestamp, buildTags());
+  @Override
+  protected Mono<RSocket> getRSocket(RSocketRequester rSocketRequester) {
+    if (Objects.nonNull(rSocketRequester.rsocketClient())) {
+      return rSocketRequester.rsocketClient().source();
+    }
+    return Mono.just(rSocketRequester.rsocket());
   }
 }

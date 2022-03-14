@@ -15,17 +15,23 @@
  */
 package doodle.rsocket.broker.server.core.query;
 
+import static doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo.from;
+
+import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
+import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
+import doodle.rsocket.broker.core.routing.RSocketRoutingRouteJoin;
 import doodle.rsocket.broker.core.routing.RSocketRoutingTags;
 import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketIndex;
+import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketTable;
 import io.netty.util.concurrent.FastThreadLocal;
 import io.rsocket.RSocket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 
 public class BrokerCombinedRSocketQuery implements BrokerRSocketQuery {
 
   private static final FastThreadLocal<List<RSocket>> RSOCKET_STORE;
+  private static final FastThreadLocal<Set<RSocketRoutingRouteId>> FOUND_STORE;
 
   static {
     RSOCKET_STORE =
@@ -35,18 +41,36 @@ public class BrokerCombinedRSocketQuery implements BrokerRSocketQuery {
             return new ArrayList<>();
           }
         };
+
+    FOUND_STORE =
+        new FastThreadLocal<Set<RSocketRoutingRouteId>>() {
+          @Override
+          protected Set<RSocketRoutingRouteId> initialValue() {
+            return new HashSet<>();
+          }
+        };
   }
 
+  private final RSocketRoutingRouteId brokerId;
   private final BrokerRoutingRSocketIndex routingIndex;
+  private final BrokerRoutingRSocketTable routingTable;
+  private final Function<RSocketRoutingBrokerInfo, RSocket> brokerInfoRSocketMapper;
 
-  public BrokerCombinedRSocketQuery(BrokerRoutingRSocketIndex routingIndex) {
+  public BrokerCombinedRSocketQuery(
+      RSocketRoutingRouteId brokerId,
+      BrokerRoutingRSocketIndex routingIndex,
+      BrokerRoutingRSocketTable routingTable,
+      Function<RSocketRoutingBrokerInfo, RSocket> brokerInfoRSocketMapper) {
+    this.brokerId = brokerId;
     this.routingIndex = routingIndex;
+    this.routingTable = routingTable;
+    this.brokerInfoRSocketMapper = brokerInfoRSocketMapper;
   }
 
   @Override
   public List<RSocket> query(RSocketRoutingTags tags) {
     if (Objects.isNull(tags) || tags.isEmpty()) {
-      return null;
+      throw new IllegalArgumentException("tags can not be empty!");
     }
 
     List<RSocket> rSocketStored = RSOCKET_STORE.get();
@@ -55,6 +79,19 @@ public class BrokerCombinedRSocketQuery implements BrokerRSocketQuery {
     List<RSocket> rSockets = routingIndex.query(tags);
     if (Objects.nonNull(rSockets) && !rSockets.isEmpty()) {
       rSocketStored.addAll(rSockets);
+    }
+
+    Set<RSocketRoutingRouteId> foundStore = FOUND_STORE.get();
+    foundStore.clear();
+
+    for (RSocketRoutingRouteJoin routeJoin : routingTable.find(tags)) {
+      RSocketRoutingRouteId joinedBrokerId = routeJoin.getRouteId();
+      if (!Objects.equals(this.brokerId, joinedBrokerId) && !foundStore.contains(joinedBrokerId)) {
+        foundStore.add(joinedBrokerId);
+
+        RSocketRoutingBrokerInfo brokerInfo = from(joinedBrokerId).build();
+        rSocketStored.add(brokerInfoRSocketMapper.apply(brokerInfo));
+      }
     }
 
     return rSocketStored;

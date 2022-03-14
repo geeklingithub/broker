@@ -16,6 +16,7 @@
 package doodle.rsocket.broker.core.routing;
 
 import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupCodec.routeId;
+import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupCodec.serviceName;
 import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupCodec.tags;
 
 import io.netty.buffer.ByteBuf;
@@ -24,24 +25,32 @@ import java.util.StringJoiner;
 public final class RSocketRoutingRouteSetup extends RSocketRoutingFrame {
 
   private final RSocketRoutingRouteId routeId;
+  private final String serviceName;
   private final RSocketRoutingTags tags;
 
-  public static RSocketRoutingRouteSetupBuilder from(RSocketRoutingRouteId routeId) {
-    return new RSocketRoutingRouteSetupBuilder(routeId);
+  public static RSocketRoutingRouteSetupBuilder from(
+      RSocketRoutingRouteId routeId, String serviceName) {
+    return new RSocketRoutingRouteSetupBuilder(routeId, serviceName);
   }
 
   public static RSocketRoutingRouteSetup from(ByteBuf byteBuf) {
-    return from(routeId(byteBuf)).with(tags(byteBuf)).build();
+    return from(routeId(byteBuf), serviceName(byteBuf)).with(tags(byteBuf)).build();
   }
 
-  RSocketRoutingRouteSetup(RSocketRoutingRouteId routeId, RSocketRoutingTags tags) {
+  RSocketRoutingRouteSetup(
+      RSocketRoutingRouteId routeId, String serviceName, RSocketRoutingTags tags) {
     super(RSocketRoutingFrameType.ROUTE_SETUP, 0);
     this.routeId = routeId;
+    this.serviceName = serviceName;
     this.tags = tags;
   }
 
   public RSocketRoutingRouteId getRouteId() {
     return routeId;
+  }
+
+  public String getServiceName() {
+    return serviceName;
   }
 
   public RSocketRoutingTags getTags() {

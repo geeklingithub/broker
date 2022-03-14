@@ -16,9 +16,10 @@
 package doodle.rsocket.broker.server.routing.rsocket;
 
 import static doodle.rsocket.broker.core.routing.RSocketRoutingMimeTypes.ROUTING_FRAME_METADATA_KEY;
+import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.ROUTE_ID;
+import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.SERVICE_NAME;
 
-import doodle.rsocket.broker.core.routing.RSocketRoutingFrame;
-import doodle.rsocket.broker.core.routing.RSocketRoutingRouteSetup;
+import doodle.rsocket.broker.core.routing.*;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingAcceptor;
 import io.rsocket.ConnectionSetupPayload;
 import io.rsocket.RSocket;
@@ -35,15 +36,21 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
   private static final Logger logger =
       LoggerFactory.getLogger(RSocketBrokerServerRoutingAcceptor.class);
 
+  private final RSocketRoutingRouteId brokerId;
   private final BrokerRoutingRSocketIndex routingIndex;
+  private final BrokerRoutingRSocketTable routingTable;
   private final BrokerRoutingRSocketFactory routingRSocketFactory;
   private final MetadataExtractor metadataExtractor;
 
   public RSocketBrokerServerRoutingAcceptor(
+      RSocketRoutingRouteId brokerId,
       BrokerRoutingRSocketIndex routingIndex,
+      BrokerRoutingRSocketTable routingTable,
       BrokerRoutingRSocketFactory routingRSocketFactory,
       MetadataExtractor metadataExtractor) {
+    this.brokerId = Objects.requireNonNull(brokerId);
     this.routingIndex = Objects.requireNonNull(routingIndex);
+    this.routingTable = Objects.requireNonNull(routingTable);
     this.routingRSocketFactory = Objects.requireNonNull(routingRSocketFactory);
     this.metadataExtractor = Objects.requireNonNull(metadataExtractor);
   }
@@ -54,19 +61,20 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
       MimeType mimeType = MimeType.valueOf(setupPayload.metadataMimeType());
       Map<String, Object> setupMetadataMap = // result map always be exists
           this.metadataExtractor.extract(setupPayload, mimeType);
-      // TODO: 2022/3/11 process BROKER_INFO
       if (setupMetadataMap.containsKey(ROUTING_FRAME_METADATA_KEY)) {
         RSocketRoutingFrame routingFrame =
             (RSocketRoutingFrame) setupMetadataMap.get(ROUTING_FRAME_METADATA_KEY);
         Runnable doCleanup = () -> cleanup(routingFrame);
         RSocket wrapRSocket = wrapSendingRSocket(sendingSocket, routingFrame);
-        if (routingFrame instanceof RSocketRoutingRouteSetup) { // RouteSetup frame required
+        if (routingFrame instanceof RSocketRoutingBrokerInfo) {
+          // TODO: 2022/3/14 handle BrokerInfo frame
+        } else if (routingFrame instanceof RSocketRoutingRouteSetup) { // RouteSetup frame required
           RSocketRoutingRouteSetup routeSetup = (RSocketRoutingRouteSetup) routingFrame;
           return Mono.defer(
               () -> {
-                // TODO: 2022/3/11 maybe wrap ROUTE_SETUP to ROUTE_JOIN and build routing table with
-                // ROUTE_JOIN
-                routingIndex.put(routeSetup.getRouteId(), wrapRSocket, routeSetup.getTags());
+                RSocketRoutingRouteJoin routeJoin = toRouteJoin(routeSetup);
+                routingIndex.put(routeJoin.getRouteId(), wrapRSocket, routeSetup.getTags());
+                routingTable.add(routeJoin);
                 return finalize(sendingSocket, doCleanup);
               });
         }
@@ -80,9 +88,13 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
   }
 
   private void cleanup(RSocketRoutingFrame routingFrame) {
-    if (routingFrame instanceof RSocketRoutingRouteSetup) {
-      RSocketRoutingRouteSetup setup = (RSocketRoutingRouteSetup) routingFrame;
-      this.routingIndex.remove(setup.getRouteId());
+    if (routingFrame instanceof RSocketRoutingBrokerInfo) {
+      // TODO: 2022/3/14 handle BrokerInfo frame
+    } else if (routingFrame instanceof RSocketRoutingRouteSetup) {
+      RSocketRoutingRouteSetup routeSetup = (RSocketRoutingRouteSetup) routingFrame;
+      RSocketRoutingRouteId routeId = routeSetup.getRouteId();
+      this.routingTable.remove(routeId);
+      this.routingIndex.remove(routeId);
     }
   }
 
@@ -96,8 +108,19 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
     Flux.firstWithSignal( // rsocket combo close
             receivingRSocket.onClose(),
             sendingSocket.onClose()) // any rsocket closed will emit signal
-        .doFinally(s -> doCleanup.run())
+        .doFinally(__ -> doCleanup.run())
         .subscribe();
     return Mono.just(receivingRSocket);
+  }
+
+  private RSocketRoutingRouteJoin toRouteJoin(RSocketRoutingRouteSetup routeSetup) {
+    return RSocketRoutingRouteJoin.builder()
+        .brokerId(brokerId)
+        .routeId(routeSetup.getRouteId())
+        .serviceName(routeSetup.getServiceName())
+        .with(routeSetup.getTags())
+        .with(ROUTE_ID, routeSetup.getRouteId().toString())
+        .with(SERVICE_NAME, routeSetup.getServiceName())
+        .build();
   }
 }
