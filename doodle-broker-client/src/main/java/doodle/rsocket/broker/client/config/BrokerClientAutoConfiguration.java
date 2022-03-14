@@ -16,13 +16,16 @@
 package doodle.rsocket.broker.client.config;
 
 import doodle.rsocket.broker.core.routing.config.BrokerRSocketStrategiesAutoConfiguration;
+import doodle.rsocket.broker.core.transport.netty.NettyBrokerClientRSocketTransportFactory;
 import io.rsocket.RSocket;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.rsocket.RSocketRequesterAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.RSocketStrategies;
 
@@ -34,4 +37,11 @@ import org.springframework.messaging.rsocket.RSocketStrategies;
   RSocketRequesterAutoConfiguration.class,
   BrokerRSocketStrategiesAutoConfiguration.class
 })
-public class BrokerClientAutoConfiguration {}
+public class BrokerClientAutoConfiguration {
+
+  @Bean
+  @ConditionalOnMissingBean
+  public NettyBrokerClientRSocketTransportFactory nettyBrokerClientRSocketTransportFactory() {
+    return new NettyBrokerClientRSocketTransportFactory();
+  }
+}

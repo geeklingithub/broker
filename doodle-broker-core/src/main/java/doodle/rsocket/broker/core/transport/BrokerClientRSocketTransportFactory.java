@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.transport;
+package doodle.rsocket.broker.core.transport;
 
-import doodle.rsocket.broker.core.transport.BrokerRSocketTransportFactory;
+import io.rsocket.transport.ClientTransport;
 
-public interface BrokerRSocketServerTransportFactory
-    extends BrokerRSocketTransportFactory<BrokerRSocketServerFactory> {}
+public interface BrokerClientRSocketTransportFactory
+    extends BrokerRSocketTransportFactory<ClientTransport> {}

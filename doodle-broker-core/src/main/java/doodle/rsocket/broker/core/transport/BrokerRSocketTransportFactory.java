@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.transport;
+package doodle.rsocket.broker.core.transport;
 
-import doodle.rsocket.broker.core.transport.BrokerRSocketTransportFactory;
+import java.net.URI;
 
-public interface BrokerRSocketServerTransportFactory
-    extends BrokerRSocketTransportFactory<BrokerRSocketServerFactory> {}
+public interface BrokerRSocketTransportFactory<TO_CREATE_FACTORY> {
+  boolean supports(URI uri);
+
+  TO_CREATE_FACTORY create(URI uri);
+}

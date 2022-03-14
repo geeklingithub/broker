@@ -22,19 +22,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 
 @EnableBrokerServer
 @SpringBootApplication
-public class SampleBrokerServerApplication
-    implements ApplicationListener<BrokerProxyServerInitializedEvent> {
+public class SampleBrokerServerApplication {
   private static final Logger logger = LoggerFactory.getLogger(SampleBrokerServerApplication.class);
+
+  @Bean
+  public ApplicationListener<BrokerProxyServerInitializedEvent> proxyListener() {
+    return (event) -> logger.info("Proxy bind!");
+  }
+
+  @Bean
+  public ApplicationListener<BrokerProxyServerInitializedEvent> clusterListener() {
+    return (event) -> logger.info("Cluster bind!");
+  }
 
   public static void main(String[] args) {
     SpringApplication.run(SampleBrokerServerApplication.class, args);
-  }
-
-  @Override
-  public void onApplicationEvent(BrokerProxyServerInitializedEvent event) {
-    logger.info("Broker bind!");
   }
 }
