@@ -18,6 +18,7 @@ package doodle.rsocket.broker.core.routing;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 
 public class RSocketRoutingTags {
 
@@ -67,11 +68,6 @@ public class RSocketRoutingTags {
   }
 
   @Override
-  public String toString() {
-    return "RSocketRoutingTags{" + "tags=" + tags + '}';
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -82,5 +78,12 @@ public class RSocketRoutingTags {
   @Override
   public int hashCode() {
     return Objects.hash(tags);
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", RSocketRoutingTags.class.getSimpleName() + "[", "]")
+        .add("tags=" + tags)
+        .toString();
   }
 }

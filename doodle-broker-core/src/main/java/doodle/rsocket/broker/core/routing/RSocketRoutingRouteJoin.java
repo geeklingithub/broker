@@ -20,6 +20,7 @@ import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteJoinCo
 
 import io.netty.buffer.ByteBuf;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class RSocketRoutingRouteJoin extends RSocketRoutingFrame {
   private final RSocketRoutingRouteId brokerId;
@@ -95,18 +96,12 @@ public class RSocketRoutingRouteJoin extends RSocketRoutingFrame {
 
   @Override
   public String toString() {
-    return "RSocketRoutingRouteJoin{"
-        + "brokerId="
-        + brokerId
-        + ", routeId="
-        + routeId
-        + ", timestamp="
-        + timestamp
-        + ", serviceName='"
-        + serviceName
-        + '\''
-        + ", tags="
-        + tags
-        + '}';
+    return new StringJoiner(", ", RSocketRoutingRouteJoin.class.getSimpleName() + "[", "]")
+        .add("brokerId=" + brokerId)
+        .add("routeId=" + routeId)
+        .add("timestamp=" + timestamp)
+        .add("serviceName='" + serviceName + "'")
+        .add("tags=" + tags)
+        .toString();
   }
 }

@@ -17,6 +17,8 @@ package doodle.rsocket.broker.core.routing;
 
 import doodle.rsocket.broker.core.routing.codec.RSocketRoutingAddressCodec;
 import io.netty.buffer.ByteBuf;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public class RSocketRoutingAddress extends RSocketRoutingFrame {
 
@@ -51,5 +53,26 @@ public class RSocketRoutingAddress extends RSocketRoutingFrame {
 
   public RSocketRoutingTags getTags() {
     return tags;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    RSocketRoutingAddress that = (RSocketRoutingAddress) o;
+    return Objects.equals(originRouteId, that.originRouteId) && Objects.equals(tags, that.tags);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(originRouteId, tags);
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", RSocketRoutingAddress.class.getSimpleName() + "[", "]")
+        .add("originRouteId=" + originRouteId)
+        .add("tags=" + tags)
+        .toString();
   }
 }

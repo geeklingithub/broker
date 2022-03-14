@@ -19,6 +19,7 @@ import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupC
 import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteSetupCodec.tags;
 
 import io.netty.buffer.ByteBuf;
+import java.util.StringJoiner;
 
 public final class RSocketRoutingRouteSetup extends RSocketRoutingFrame {
 
@@ -49,6 +50,9 @@ public final class RSocketRoutingRouteSetup extends RSocketRoutingFrame {
 
   @Override
   public String toString() {
-    return "RSocketRoutingRouteSetup{" + "routeId=" + routeId + ", tags=" + tags + '}';
+    return new StringJoiner(", ", RSocketRoutingRouteSetup.class.getSimpleName() + "[", "]")
+        .add("routeId=" + routeId)
+        .add("tags=" + tags)
+        .toString();
   }
 }

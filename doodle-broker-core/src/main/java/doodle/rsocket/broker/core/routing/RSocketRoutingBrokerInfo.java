@@ -22,6 +22,7 @@ import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingBrokerInfoC
 
 import io.netty.buffer.ByteBuf;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class RSocketRoutingBrokerInfo extends RSocketRoutingFrame {
   private final RSocketRoutingRouteId brokerId;
@@ -73,5 +74,14 @@ public class RSocketRoutingBrokerInfo extends RSocketRoutingFrame {
   @Override
   public int hashCode() {
     return Objects.hash(brokerId, timestamp, tags);
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", RSocketRoutingBrokerInfo.class.getSimpleName() + "[", "]")
+        .add("brokerId=" + brokerId)
+        .add("timestamp=" + timestamp)
+        .add("tags=" + tags)
+        .toString();
   }
 }

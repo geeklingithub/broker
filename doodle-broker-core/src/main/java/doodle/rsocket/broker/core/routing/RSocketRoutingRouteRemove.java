@@ -22,6 +22,7 @@ import static doodle.rsocket.broker.core.routing.codec.RSocketRoutingRouteRemove
 
 import io.netty.buffer.ByteBuf;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class RSocketRoutingRouteRemove extends RSocketRoutingFrame {
   private final RSocketRoutingRouteId brokerId;
@@ -77,13 +78,10 @@ public class RSocketRoutingRouteRemove extends RSocketRoutingFrame {
 
   @Override
   public String toString() {
-    return "RSocketRoutingRouteRemove{"
-        + "brokerId="
-        + brokerId
-        + ", routeId="
-        + routeId
-        + ", timestamp="
-        + timestamp
-        + '}';
+    return new StringJoiner(", ", RSocketRoutingRouteRemove.class.getSimpleName() + "[", "]")
+        .add("brokerId=" + brokerId)
+        .add("routeId=" + routeId)
+        .add("timestamp=" + timestamp)
+        .toString();
   }
 }

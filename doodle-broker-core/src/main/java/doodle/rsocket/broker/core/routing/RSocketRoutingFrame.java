@@ -15,6 +15,8 @@
  */
 package doodle.rsocket.broker.core.routing;
 
+import java.util.StringJoiner;
+
 public class RSocketRoutingFrame {
   private final RSocketRoutingFrameType frameType;
   private final int flags;
@@ -30,5 +32,13 @@ public class RSocketRoutingFrame {
 
   public int getFlags() {
     return flags;
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", RSocketRoutingFrame.class.getSimpleName() + "[", "]")
+        .add("frameType=" + frameType)
+        .add("flags=" + flags)
+        .toString();
   }
 }
