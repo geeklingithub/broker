@@ -16,7 +16,7 @@
 package doodle.samples.rsocket.broker.server;
 
 import doodle.rsocket.broker.server.EnableBrokerServer;
-import doodle.rsocket.broker.server.proxy.context.BrokerProxyServerInitializedEvent;
+import doodle.rsocket.broker.server.proxy.BrokerProxyServerInitializedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

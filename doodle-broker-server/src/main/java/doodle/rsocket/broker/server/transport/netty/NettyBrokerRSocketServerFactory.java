@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.proxy.rsocket;
+package doodle.rsocket.broker.server.transport.netty;
 
-import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_PROXY_SERVER_DEFAULT_URI;
-
-import doodle.rsocket.broker.server.proxy.BrokerProxyServer;
-import doodle.rsocket.broker.server.proxy.BrokerProxyServerFactory;
-import doodle.rsocket.broker.server.proxy.ConfigurableBrokerProxyServerFactory;
+import doodle.rsocket.broker.core.transport.BrokerRSocketTransport;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServer;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServerFactory;
+import doodle.rsocket.broker.server.transport.ConfigurableBrokerRSocketServerFactory;
 import io.rsocket.SocketAcceptor;
 import io.rsocket.core.RSocketServer;
 import io.rsocket.transport.netty.server.CloseableChannel;
@@ -30,21 +29,29 @@ import java.time.Duration;
 import reactor.core.publisher.Mono;
 import reactor.netty.tcp.TcpServer;
 
-public class RSocketBrokerProxyServerFactory
-    implements BrokerProxyServerFactory, ConfigurableBrokerProxyServerFactory {
+public class NettyBrokerRSocketServerFactory
+    implements BrokerRSocketServerFactory, ConfigurableBrokerRSocketServerFactory {
 
-  private URI uri = URI.create(RSOCKET_PROXY_SERVER_DEFAULT_URI);
+  @SuppressWarnings("unused")
+  private BrokerRSocketTransport transport = BrokerRSocketTransport.TCP;
 
+  private URI uri;
   private Duration lifecycleTimeout;
 
   @Override
-  public BrokerProxyServer createServer(SocketAcceptor socketAcceptor) {
+  public BrokerRSocketServer createServer(SocketAcceptor socketAcceptor) {
+    // TODO: 2022/3/14 websocket support
     TcpServer tcpServer =
         TcpServer.create().bindAddress(() -> new InetSocketAddress(uri.getHost(), uri.getPort()));
     TcpServerTransport serverTransport = TcpServerTransport.create(tcpServer);
     Mono<CloseableChannel> serverStarter =
         RSocketServer.create().acceptor(socketAcceptor).bind(serverTransport);
-    return new RSocketBrokerProxyServer(serverStarter, this.lifecycleTimeout);
+    return new NettyBrokerRSocketServer(serverStarter, lifecycleTimeout);
+  }
+
+  @Override
+  public void setTransport(BrokerRSocketTransport transport) {
+    this.transport = transport;
   }
 
   @Override

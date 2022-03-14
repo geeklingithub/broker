@@ -3,6 +3,7 @@ doodle:
     broker:
       server:
         proxy:
+          enabled: false
           port: 8001
         cluster:
           port: 9001

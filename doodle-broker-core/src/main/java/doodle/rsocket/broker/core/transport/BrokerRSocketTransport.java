@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.proxy;
+package doodle.rsocket.broker.core.transport;
 
-import io.rsocket.SocketAcceptor;
-
-public interface BrokerProxyServerFactory {
-  BrokerProxyServer createServer(SocketAcceptor socketAcceptor);
+public enum BrokerRSocketTransport {
+  TCP,
+  WEB_SOCKET;
 }

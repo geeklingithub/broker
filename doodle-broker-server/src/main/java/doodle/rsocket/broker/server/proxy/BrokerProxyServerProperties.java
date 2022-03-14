@@ -21,14 +21,23 @@ import java.net.URI;
 
 public class BrokerProxyServerProperties {
 
+  private boolean enabled = true;
+
   private URI uri = URI.create(RSOCKET_PROXY_SERVER_DEFAULT_URI);
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
 
   public URI getUri() {
     return uri;
   }
 
-  public BrokerProxyServerProperties setUri(URI uri) {
+  public void setUri(URI uri) {
     this.uri = uri;
-    return this;
   }
 }

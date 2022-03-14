@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.cluster.rsocket;
+package doodle.rsocket.broker.server.transport;
 
-public interface RSocketBrokerClusterServerFactoryCustomizer {
-  void customize(RSocketBrokerClusterServerFactory serverFactory);
+import io.rsocket.SocketAcceptor;
+
+public interface BrokerRSocketServerFactory {
+  BrokerRSocketServer createServer(SocketAcceptor socketAcceptor);
 }

@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.cluster;
+package doodle.rsocket.broker.server.transport;
 
-import io.rsocket.SocketAcceptor;
+import java.net.URI;
 
-public interface BrokerClusterServerFactory {
-  BrokerClusterServer createServer(SocketAcceptor socketAcceptor);
+public interface BrokerRSocketServerTransportFactory {
+  boolean supports(URI uri);
+
+  BrokerRSocketServerFactory create(URI uri);
 }

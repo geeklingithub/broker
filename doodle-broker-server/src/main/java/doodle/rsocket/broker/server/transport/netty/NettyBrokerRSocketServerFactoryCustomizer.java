@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.cluster;
+package doodle.rsocket.broker.server.transport.netty;
 
-import org.springframework.context.SmartLifecycle;
-
-public interface BrokerClusterServer extends SmartLifecycle {}
+@FunctionalInterface
+public interface NettyBrokerRSocketServerFactoryCustomizer {
+  void customize(NettyBrokerRSocketServerFactory serverFactory);
+}

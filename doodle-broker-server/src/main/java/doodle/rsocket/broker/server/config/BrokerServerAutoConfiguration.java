@@ -19,6 +19,7 @@ import doodle.rsocket.broker.server.cluster.BrokerClusterServerConfiguration;
 import doodle.rsocket.broker.server.cluster.BrokerCusterServerMessagingConfiguration;
 import doodle.rsocket.broker.server.proxy.BrokerProxyServerConfiguration;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingConfiguration;
+import doodle.rsocket.broker.server.transport.BrokerRSocketTransportConfiguration;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnBean(BrokerServerMarkerConfiguration.Marker.class)
 @EnableConfigurationProperties(BrokerServerProperties.class)
 @Import({
+  BrokerRSocketTransportConfiguration.class,
   BrokerServerRoutingConfiguration.class,
   BrokerProxyServerConfiguration.class,
   BrokerCusterServerMessagingConfiguration.class,

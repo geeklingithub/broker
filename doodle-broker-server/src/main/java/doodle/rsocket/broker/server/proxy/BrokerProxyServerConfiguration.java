@@ -18,11 +18,12 @@ package doodle.rsocket.broker.server.proxy;
 import static doodle.rsocket.broker.server.BrokerServerConstants.PREFIX;
 
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
-import doodle.rsocket.broker.server.proxy.context.BrokerProxyServerBootstrap;
-import doodle.rsocket.broker.server.proxy.rsocket.RSocketBrokerProxyServerFactory;
-import doodle.rsocket.broker.server.proxy.rsocket.RSocketBrokerProxyServerFactoryCustomizer;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingAcceptor;
 import doodle.rsocket.broker.server.routing.BrokerServerRoutingConfiguration;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServerBootstrap;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServerFactory;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServerTransportFactory;
+import doodle.rsocket.broker.server.transport.BrokerRSocketTransportConfiguration;
 import io.rsocket.transport.netty.server.TcpServerTransport;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringBootConfiguration;
@@ -30,14 +31,17 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.PropertyMapper;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import reactor.netty.tcp.TcpServer;
 
 @SpringBootConfiguration(proxyBeanMethods = false)
 @ConditionalOnClass({TcpServerTransport.class, TcpServer.class})
-@AutoConfigureAfter(BrokerServerRoutingConfiguration.class)
-@ConditionalOnProperty(prefix = PREFIX + ".proxy", name = "port")
+@AutoConfigureAfter({
+  BrokerRSocketTransportConfiguration.class,
+  BrokerServerRoutingConfiguration.class,
+})
+@ConditionalOnProperty(prefix = PREFIX + ".proxy", name = "enabled")
 public class BrokerProxyServerConfiguration {
 
   @Bean
@@ -48,21 +52,23 @@ public class BrokerProxyServerConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean
-  public BrokerProxyServerFactory brokerProxyServerFactory(
+  public BrokerRSocketServerBootstrap brokerProxyRSocketServerBootstrap(
       BrokerProxyServerProperties properties,
-      ObjectProvider<RSocketBrokerProxyServerFactoryCustomizer> customizers) {
-    RSocketBrokerProxyServerFactory serverFactory = new RSocketBrokerProxyServerFactory();
-    PropertyMapper mapper = PropertyMapper.get();
-    mapper.from(properties::getUri).to(serverFactory::setUri);
-    customizers.orderedStream().forEach((customizer) -> customizer.customize(serverFactory));
-    return serverFactory;
-  }
-
-  @Bean
-  @ConditionalOnMissingBean
-  public BrokerProxyServerBootstrap brokerProxyServerBootstrap(
-      BrokerProxyServerFactory serverFactory, BrokerServerRoutingAcceptor registry) {
-    return new BrokerProxyServerBootstrap(serverFactory, registry);
+      ObjectProvider<BrokerRSocketServerTransportFactory> transportFactories,
+      BrokerServerRoutingAcceptor routingAcceptor,
+      ApplicationContext applicationContext) {
+    BrokerRSocketServerFactory serverFactory =
+        transportFactories
+            .orderedStream()
+            .filter(transportFactory -> transportFactory.supports(properties.getUri()))
+            .findFirst()
+            .map(transportFactory -> transportFactory.create(properties.getUri()))
+            .orElseThrow(
+                () -> new IllegalArgumentException("Unknown transport: " + properties.getUri()));
+    return new BrokerRSocketServerBootstrap(
+        serverFactory,
+        routingAcceptor,
+        (proxyServer) ->
+            applicationContext.publishEvent(new BrokerProxyServerInitializedEvent(proxyServer)));
   }
 }

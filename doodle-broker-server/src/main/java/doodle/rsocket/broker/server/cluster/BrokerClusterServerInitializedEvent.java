@@ -15,11 +15,21 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
-import java.net.URI;
-import java.time.Duration;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServer;
+import org.springframework.context.ApplicationEvent;
 
-public interface ConfigurableBrokerClusterServerFactory {
-  void setUri(URI uri);
+public class BrokerClusterServerInitializedEvent extends ApplicationEvent {
 
-  void setLifecycleTimeout(Duration lifecycleTimeout);
+  public BrokerClusterServerInitializedEvent(BrokerRSocketServer clusterServer) {
+    super(clusterServer);
+  }
+
+  @Override
+  public BrokerRSocketServer getSource() {
+    return (BrokerRSocketServer) super.getSource();
+  }
+
+  public BrokerRSocketServer getServer() {
+    return this.getSource();
+  }
 }

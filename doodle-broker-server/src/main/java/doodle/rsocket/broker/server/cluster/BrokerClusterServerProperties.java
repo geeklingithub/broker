@@ -24,6 +24,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 public class BrokerClusterServerProperties {
 
+  private boolean enabled = true;
+
   private URI uri = URI.create(RSOCKET_CLUSTER_SERVER_DEFAULT_URI);
 
   @NestedConfigurationProperty
@@ -33,9 +35,16 @@ public class BrokerClusterServerProperties {
     return uri;
   }
 
-  public BrokerClusterServerProperties setUri(URI uri) {
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  public void setUri(URI uri) {
     this.uri = uri;
-    return this;
   }
 
   public List<BrokerClusterNodeProperties> getNodes() {

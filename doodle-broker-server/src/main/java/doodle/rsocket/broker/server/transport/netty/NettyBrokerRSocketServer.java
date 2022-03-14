@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.cluster.rsocket;
+package doodle.rsocket.broker.server.transport.netty;
 
-import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_CLUSTER_SERVER_DAEMON_AWAIT_THREAD_NAME;
-
-import doodle.rsocket.broker.server.cluster.BrokerClusterServer;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServer;
 import io.rsocket.transport.netty.server.CloseableChannel;
 import java.time.Duration;
 import java.util.Objects;
 import reactor.core.publisher.Mono;
 
-final class RSocketBrokerClusterServer implements BrokerClusterServer {
+final class NettyBrokerRSocketServer implements BrokerRSocketServer {
 
   private final Mono<CloseableChannel> serverStarter;
   private final Duration lifecycleTimeout;
   private CloseableChannel serverChannel;
 
-  RSocketBrokerClusterServer(Mono<CloseableChannel> serverStarter, Duration lifecycleTimeout) {
+  NettyBrokerRSocketServer(Mono<CloseableChannel> serverStarter, Duration lifecycleTimeout) {
     this.serverStarter = Objects.requireNonNull(serverStarter);
     this.lifecycleTimeout = lifecycleTimeout;
   }
@@ -42,8 +40,7 @@ final class RSocketBrokerClusterServer implements BrokerClusterServer {
 
   private void startDaemonAwaitThread(CloseableChannel serverChannel) {
     Thread thread =
-        new Thread(
-            () -> serverChannel.onClose().block(), RSOCKET_CLUSTER_SERVER_DAEMON_AWAIT_THREAD_NAME);
+        new Thread(() -> serverChannel.onClose().block(), this.getClass().getSimpleName());
     thread.setContextClassLoader(getClass().getClassLoader());
     thread.setDaemon(false);
     thread.start();

@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.proxy.rsocket;
+package doodle.rsocket.broker.server.transport;
 
-public interface RSocketBrokerProxyServerFactoryCustomizer {
-  void customize(RSocketBrokerProxyServerFactory serverFactory);
+import doodle.rsocket.broker.core.transport.BrokerRSocketTransport;
+import java.net.URI;
+import java.time.Duration;
+
+public interface ConfigurableBrokerRSocketServerFactory {
+  void setTransport(BrokerRSocketTransport transport);
+
+  void setUri(URI uri);
+
+  void setLifecycleTimeout(Duration lifecycleTimeout);
 }

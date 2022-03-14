@@ -15,6 +15,20 @@
  */
 package doodle.rsocket.broker.server.proxy;
 
-import org.springframework.context.SmartLifecycle;
+import doodle.rsocket.broker.server.transport.BrokerRSocketServer;
+import org.springframework.context.ApplicationEvent;
 
-public interface BrokerProxyServer extends SmartLifecycle {}
+public class BrokerProxyServerInitializedEvent extends ApplicationEvent {
+  public BrokerProxyServerInitializedEvent(BrokerRSocketServer proxyServer) {
+    super(proxyServer);
+  }
+
+  public BrokerRSocketServer getServer() {
+    return this.getSource();
+  }
+
+  @Override
+  public BrokerRSocketServer getSource() {
+    return (BrokerRSocketServer) super.getSource();
+  }
+}

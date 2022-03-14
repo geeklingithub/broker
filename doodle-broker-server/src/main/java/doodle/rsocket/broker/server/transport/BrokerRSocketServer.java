@@ -13,22 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.rsocket.broker.server.proxy.context;
+package doodle.rsocket.broker.server.transport;
 
-import doodle.rsocket.broker.server.proxy.BrokerProxyServer;
-import org.springframework.context.ApplicationEvent;
+import org.springframework.context.SmartLifecycle;
 
-public class BrokerProxyServerInitializedEvent extends ApplicationEvent {
-  public BrokerProxyServerInitializedEvent(BrokerProxyServer proxyServer) {
-    super(proxyServer);
-  }
-
-  public BrokerProxyServer getServer() {
-    return this.getSource();
-  }
-
-  @Override
-  public BrokerProxyServer getSource() {
-    return (BrokerProxyServer) super.getSource();
-  }
-}
+public interface BrokerRSocketServer extends SmartLifecycle {}
