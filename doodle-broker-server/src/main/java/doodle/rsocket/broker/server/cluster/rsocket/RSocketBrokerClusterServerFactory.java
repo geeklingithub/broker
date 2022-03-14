@@ -15,6 +15,8 @@
  */
 package doodle.rsocket.broker.server.cluster.rsocket;
 
+import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_CLUSTER_SERVER_DEFAULT_URI;
+
 import doodle.rsocket.broker.server.cluster.BrokerClusterServer;
 import doodle.rsocket.broker.server.cluster.BrokerClusterServerFactory;
 import doodle.rsocket.broker.server.cluster.ConfigurableBrokerClusterServerFactory;
@@ -22,24 +24,22 @@ import io.rsocket.SocketAcceptor;
 import io.rsocket.core.RSocketServer;
 import io.rsocket.transport.netty.server.CloseableChannel;
 import io.rsocket.transport.netty.server.TcpServerTransport;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import java.net.URI;
 import java.time.Duration;
-import java.util.Objects;
 import reactor.core.publisher.Mono;
 import reactor.netty.tcp.TcpServer;
 
 public class RSocketBrokerClusterServerFactory
     implements BrokerClusterServerFactory, ConfigurableBrokerClusterServerFactory {
 
-  private InetAddress host;
-  private int port;
+  private URI uri = URI.create(RSOCKET_CLUSTER_SERVER_DEFAULT_URI);
   private Duration lifecycleTimeout;
 
   @Override
   public BrokerClusterServer createServer(SocketAcceptor socketAcceptor) {
-    TcpServer tcpServer = TcpServer.create().bindAddress(this::getListenAddress);
+    TcpServer tcpServer =
+        TcpServer.create().bindAddress(() -> new InetSocketAddress(uri.getHost(), uri.getPort()));
     TcpServerTransport serverTransport = TcpServerTransport.create(tcpServer);
     Mono<CloseableChannel> serverStarter =
         RSocketServer.create().acceptor(socketAcceptor).bind(serverTransport);
@@ -47,23 +47,12 @@ public class RSocketBrokerClusterServerFactory
   }
 
   @Override
-  public void setHost(InetAddress host) {
-    this.host = host;
-  }
-
-  @Override
-  public void setPort(int port) {
-    this.port = port;
+  public void setUri(URI uri) {
+    this.uri = uri;
   }
 
   @Override
   public void setLifecycleTimeout(Duration lifecycleTimeout) {
     this.lifecycleTimeout = lifecycleTimeout;
-  }
-
-  private SocketAddress getListenAddress() {
-    return Objects.nonNull(this.host)
-        ? new InetSocketAddress(this.host, this.port)
-        : new InetSocketAddress(this.port);
   }
 }

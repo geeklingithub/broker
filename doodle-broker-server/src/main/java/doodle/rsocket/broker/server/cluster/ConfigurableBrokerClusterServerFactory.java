@@ -15,13 +15,11 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
-import java.net.InetAddress;
+import java.net.URI;
 import java.time.Duration;
 
 public interface ConfigurableBrokerClusterServerFactory {
-  void setHost(InetAddress host);
-
-  void setPort(int port);
+  void setUri(URI uri);
 
   void setLifecycleTimeout(Duration lifecycleTimeout);
 }

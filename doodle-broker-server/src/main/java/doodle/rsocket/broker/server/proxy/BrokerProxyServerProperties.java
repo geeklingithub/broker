@@ -15,15 +15,13 @@
  */
 package doodle.rsocket.broker.server.proxy;
 
-import java.net.InetAddress;
+import static doodle.rsocket.broker.server.BrokerServerConstants.RSOCKET_PROXY_SERVER_DEFAULT_URI;
+
 import java.net.URI;
 
 public class BrokerProxyServerProperties {
 
-  private URI uri = URI.create("tcp://localhost:8001");
-
-  private InetAddress host;
-  private int port;
+  private URI uri = URI.create(RSOCKET_PROXY_SERVER_DEFAULT_URI);
 
   public URI getUri() {
     return uri;
@@ -32,21 +30,5 @@ public class BrokerProxyServerProperties {
   public BrokerProxyServerProperties setUri(URI uri) {
     this.uri = uri;
     return this;
-  }
-
-  public InetAddress getHost() {
-    return host;
-  }
-
-  public void setHost(InetAddress host) {
-    this.host = host;
-  }
-
-  public int getPort() {
-    return port;
-  }
-
-  public void setPort(int port) {
-    this.port = port;
   }
 }

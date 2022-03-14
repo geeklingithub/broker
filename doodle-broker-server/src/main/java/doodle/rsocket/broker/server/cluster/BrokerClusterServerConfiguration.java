@@ -69,8 +69,7 @@ public class BrokerClusterServerConfiguration {
       ObjectProvider<RSocketBrokerClusterServerFactoryCustomizer> customizers) {
     RSocketBrokerClusterServerFactory serverFactory = new RSocketBrokerClusterServerFactory();
     PropertyMapper mapper = PropertyMapper.get();
-    mapper.from(properties::getHost).to(serverFactory::setHost);
-    mapper.from(properties::getPort).to(serverFactory::setPort);
+    mapper.from(properties::getUri).to(serverFactory::setUri);
     customizers.orderedStream().forEach((customizer) -> customizer.customize(serverFactory));
     return serverFactory;
   }

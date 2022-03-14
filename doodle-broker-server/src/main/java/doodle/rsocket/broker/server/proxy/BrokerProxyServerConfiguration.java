@@ -54,8 +54,7 @@ public class BrokerProxyServerConfiguration {
       ObjectProvider<RSocketBrokerProxyServerFactoryCustomizer> customizers) {
     RSocketBrokerProxyServerFactory serverFactory = new RSocketBrokerProxyServerFactory();
     PropertyMapper mapper = PropertyMapper.get();
-    mapper.from(properties::getHost).to(serverFactory::setHost);
-    mapper.from(properties::getPort).to(serverFactory::setPort);
+    mapper.from(properties::getUri).to(serverFactory::setUri);
     customizers.orderedStream().forEach((customizer) -> customizer.customize(serverFactory));
     return serverFactory;
   }
