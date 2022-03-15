@@ -33,5 +33,7 @@ public final class BrokerServerConstants {
   public static final String REQUEST_CLUSTER_REMOTE_BROKER_INFO =
       "broker-cluster.remote-broker-info";
 
+  public static final String REQUEST_CLUSTER_ROUTE_JOIN = "broker-cluster.route-join";
+
   private BrokerServerConstants() {}
 }

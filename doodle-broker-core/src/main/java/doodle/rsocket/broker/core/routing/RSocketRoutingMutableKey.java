@@ -19,7 +19,6 @@ import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.valu
 
 import java.util.Objects;
 import java.util.StringJoiner;
-
 import org.springframework.util.StringUtils;
 
 public class RSocketRoutingMutableKey implements RSocketRoutingKey {

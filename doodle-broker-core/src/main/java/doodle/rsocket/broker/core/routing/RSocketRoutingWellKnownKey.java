@@ -29,7 +29,9 @@ public enum RSocketRoutingWellKnownKey {
   ROUTE_ID("io.rsocket.routing.RouteId", (byte) 0x02), // Tag for route id
   INSTANCE_NAME("io.rsocket.routing.InstanceName", (byte) 0x03), // Tag for instance name
   LB_METHOD("io.rsocket.routing.LBMethod", (byte) 0x04), // load balance method, eg Round-robin
-  TEST_CELL("io.rsocket.routing.TestCell", (byte) 0x05); // A/B testing, eg test, staging, prod
+  TEST_CELL("io.rsocket.routing.TestCell", (byte) 0x05), // A/B testing, eg test, staging, prod
+  BROKER_PROXY_URI("Broker Proxy URI Key", (byte) 0x06), // broker proxy uri
+  BROKER_CLUSTER_URI("Broker Cluster URI Key", (byte) 0x07); // broker cluster uri
 
   public static RSocketRoutingWellKnownKey fromIdentifier(int id) {
     return (id < 0x00 || id > 0x7F) ? INVALID_KEY : ID_KEYS[id];

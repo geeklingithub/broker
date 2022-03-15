@@ -126,6 +126,15 @@ public class BrokerServerRoutingConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
+  public BrokerRoutingRouteJoinListener brokerRoutingRouteJoinListener(
+      BrokerServerProperties properties,
+      BrokerRoutingRSocketTable routingTable,
+      BrokerRoutingClusterConnections clusterConnections) {
+    return new BrokerRoutingRouteJoinListener(properties, routingTable, clusterConnections);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
   public BrokerCombinedRSocketQuery brokerCombinedRSocketQuery(
       BrokerServerProperties properties,
       BrokerRoutingRSocketIndex routingIndex,
@@ -185,12 +194,15 @@ public class BrokerServerRoutingConfiguration {
       BrokerServerProperties properties,
       BrokerRoutingRSocketIndex routingIndex,
       BrokerRoutingRSocketTable routingTable,
+      BrokerRoutingProxyConnections proxyConnections,
       BrokerRoutingRSocketFactory routingRSocketFactory,
       RSocketStrategies rSocketStrategies) {
     return new RSocketBrokerServerRoutingAcceptor(
         properties.getBrokerId(),
         routingIndex,
         routingTable,
+        proxyConnections::put,
+        proxyConnections::get,
         routingRSocketFactory,
         rSocketStrategies.metadataExtractor());
   }

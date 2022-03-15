@@ -25,6 +25,8 @@ import io.rsocket.ConnectionSetupPayload;
 import io.rsocket.RSocket;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.rsocket.MetadataExtractor;
@@ -39,6 +41,8 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
   private final RSocketRoutingRouteId brokerId;
   private final BrokerRoutingRSocketIndex routingIndex;
   private final BrokerRoutingRSocketTable routingTable;
+  private final BiConsumer<RSocketRoutingBrokerInfo, RSocket> brokerInfoConsumer;
+  private final Consumer<RSocketRoutingBrokerInfo> brokerInfoCleaner;
   private final BrokerRoutingRSocketFactory routingRSocketFactory;
   private final MetadataExtractor metadataExtractor;
 
@@ -46,11 +50,15 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
       RSocketRoutingRouteId brokerId,
       BrokerRoutingRSocketIndex routingIndex,
       BrokerRoutingRSocketTable routingTable,
+      BiConsumer<RSocketRoutingBrokerInfo, RSocket> brokerInfoConsumer,
+      Consumer<RSocketRoutingBrokerInfo> brokerInfoCleaner,
       BrokerRoutingRSocketFactory routingRSocketFactory,
       MetadataExtractor metadataExtractor) {
     this.brokerId = Objects.requireNonNull(brokerId);
     this.routingIndex = Objects.requireNonNull(routingIndex);
     this.routingTable = Objects.requireNonNull(routingTable);
+    this.brokerInfoConsumer = Objects.requireNonNull(brokerInfoConsumer);
+    this.brokerInfoCleaner = Objects.requireNonNull(brokerInfoCleaner);
     this.routingRSocketFactory = Objects.requireNonNull(routingRSocketFactory);
     this.metadataExtractor = Objects.requireNonNull(metadataExtractor);
   }
@@ -67,7 +75,8 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
         Runnable doCleanup = () -> cleanup(routingFrame);
         RSocket wrapRSocket = wrapSendingRSocket(sendingSocket, routingFrame);
         if (routingFrame instanceof RSocketRoutingBrokerInfo) {
-          // TODO: 2022/3/14 handle BrokerInfo frame
+          RSocketRoutingBrokerInfo brokerInfo = (RSocketRoutingBrokerInfo) routingFrame;
+          brokerInfoConsumer.accept(brokerInfo, sendingSocket);
         } else if (routingFrame instanceof RSocketRoutingRouteSetup) { // RouteSetup frame required
           RSocketRoutingRouteSetup routeSetup = (RSocketRoutingRouteSetup) routingFrame;
           return Mono.defer(
@@ -89,7 +98,8 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
 
   private void cleanup(RSocketRoutingFrame routingFrame) {
     if (routingFrame instanceof RSocketRoutingBrokerInfo) {
-      // TODO: 2022/3/14 handle BrokerInfo frame
+      RSocketRoutingBrokerInfo brokerInfo = (RSocketRoutingBrokerInfo) routingFrame;
+      brokerInfoCleaner.accept(brokerInfo);
     } else if (routingFrame instanceof RSocketRoutingRouteSetup) {
       RSocketRoutingRouteSetup routeSetup = (RSocketRoutingRouteSetup) routingFrame;
       RSocketRoutingRouteId routeId = routeSetup.getRouteId();

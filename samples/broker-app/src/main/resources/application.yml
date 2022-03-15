@@ -1,3 +1,4 @@
 doodle.rsocket.broker.client:
+  serviceName: sample
   brokers:
     - tcp://localhost:8001

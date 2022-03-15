@@ -15,14 +15,21 @@
  */
 package doodle.rsocket.broker.server.cluster;
 
+import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.BROKER_CLUSTER_URI;
+import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.BROKER_PROXY_URI;
 import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER_BROKER_INFO;
 import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER_REMOTE_BROKER_INFO;
+import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER_ROUTE_JOIN;
 
 import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
 import doodle.rsocket.broker.core.routing.RSocketRoutingFrame;
+import doodle.rsocket.broker.core.routing.RSocketRoutingRouteJoin;
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
 import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingClusterConnections;
 import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketTable;
+import io.rsocket.exceptions.ApplicationErrorException;
+import io.rsocket.exceptions.RejectedSetupException;
+import java.net.URI;
 import java.time.Duration;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
@@ -65,6 +72,58 @@ public class BrokerClusterServerController {
         .subscribe();
   }
 
+  @ConnectMapping
+  public Mono<Void> onConnect(RSocketRoutingFrame routingFrame, RSocketRequester rSocketRequester) {
+    if (!(routingFrame instanceof RSocketRoutingBrokerInfo)) {
+      return Mono.empty();
+    }
+    RSocketRoutingBrokerInfo brokerInfo = (RSocketRoutingBrokerInfo) routingFrame;
+    if (brokerInfo.getBrokerId().equals(properties.getBrokerId())) {
+      return Mono.empty();
+    }
+    logger.info("Received connection from {}", brokerInfo);
+    if (clusterConnections.contains(brokerInfo)) {
+      return Mono.error(new RejectedSetupException("Duplicate connection from " + brokerInfo));
+    }
+    clusterConnections.put(brokerInfo, rSocketRequester);
+    connectEvents.tryEmitNext(brokerInfo); // emits event when connection established
+    return Mono.empty();
+  }
+
+  @MessageMapping(REQUEST_CLUSTER_REMOTE_BROKER_INFO)
+  public void handleBrokerInfoUpdate(RSocketRoutingBrokerInfo brokerInfo) {
+    logger.info("Received remote BrokerInfo {}", brokerInfo);
+    BrokerClusterNodeProperties clusterNode = new BrokerClusterNodeProperties();
+    clusterNode.setProxy(URI.create(brokerInfo.getTags().get(BROKER_PROXY_URI)));
+    clusterNode.setCluster(URI.create(brokerInfo.getTags().get(BROKER_CLUSTER_URI)));
+    connectionEventPublisher.accept(clusterNode);
+  }
+
+  @MessageMapping(REQUEST_CLUSTER_BROKER_INFO)
+  public Mono<RSocketRoutingBrokerInfo> handleBrokerInfo(
+      RSocketRoutingBrokerInfo brokerInfo, RSocketRequester rSocketRequester) {
+    logger.info("Received BrokerInfo request from: {}", brokerInfo);
+    if (clusterConnections.contains(brokerInfo)) {
+      logger.debug("Connection for broker already exists {}", brokerInfo);
+      return Mono.just(getLocalBrokerInfo());
+    }
+    clusterConnections.put(brokerInfo, rSocketRequester);
+    return sendBrokerInfo(rSocketRequester, brokerInfo);
+  }
+
+  @MessageMapping(REQUEST_CLUSTER_ROUTE_JOIN)
+  public Mono<RSocketRoutingRouteJoin> handleRouteJoin(RSocketRoutingRouteJoin routeJoin) {
+    logger.info("Received RouteJoin {}", routeJoin);
+    RSocketRoutingBrokerInfo brokerInfo =
+        RSocketRoutingBrokerInfo.from(properties.getBrokerId()).build();
+    if (!clusterConnections.contains(brokerInfo)) {
+      return Mono.error(new ApplicationErrorException("No connection for broker " + brokerInfo));
+    }
+    routingTable.add(routeJoin);
+
+    return Mono.just(routeJoin);
+  }
+
   private Mono<RSocketRoutingBrokerInfo> onConnectEvent(RSocketRoutingBrokerInfo brokerInfo) {
     RSocketRequester requester = clusterConnections.get(brokerInfo);
     return sendBrokerInfo(requester, brokerInfo);
@@ -80,38 +139,10 @@ public class BrokerClusterServerController {
         .map(bi -> localBrokerInfo);
   }
 
-  @ConnectMapping
-  public Mono<Void> onConnect(RSocketRoutingFrame routingFrame, RSocketRequester rSocketRequester) {
-    if (!(routingFrame instanceof RSocketRoutingBrokerInfo)) {
-      return Mono.empty();
-    }
-    RSocketRoutingBrokerInfo brokerInfo = (RSocketRoutingBrokerInfo) routingFrame;
-
-    // TODO: 3/13/22 handle connection
-
-    connectEvents.tryEmitNext(brokerInfo); // emits event when connection established
-    return Mono.empty();
-  }
-
-  @MessageMapping(REQUEST_CLUSTER_REMOTE_BROKER_INFO)
-  public void handleBrokerInfoUpdate(RSocketRoutingBrokerInfo brokerInfo) {
-    logger.info("Received remote BrokerInfo {}", brokerInfo);
-
-    BrokerClusterNodeProperties clusterNode = new BrokerClusterNodeProperties();
-    connectionEventPublisher.accept(clusterNode);
-  }
-
-  @MessageMapping(REQUEST_CLUSTER_BROKER_INFO)
-  public Mono<RSocketRoutingBrokerInfo> handleBrokerInfo(
-      RSocketRoutingBrokerInfo clientBrokerInfo, RSocketRequester rSocketRequester) {
-    logger.info("Received BrokerInfo request from: {}", clientBrokerInfo);
-
-    // TODO: 3/13/22 handle broker info request
-
-    return Mono.empty();
-  }
-
   private RSocketRoutingBrokerInfo getLocalBrokerInfo() {
-    return null;
+    return RSocketRoutingBrokerInfo.from(properties.getBrokerId())
+        .with(BROKER_PROXY_URI, properties.getProxy().getUri().toString())
+        .with(BROKER_CLUSTER_URI, properties.getCluster().getUri().toString())
+        .build();
   }
 }
