@@ -91,12 +91,15 @@ public class BrokerClusterServerConfiguration {
   @ConditionalOnMissingBean
   public BrokerClusterServerController brokerClusterServerController(
       BrokerServerProperties properties,
-      RSocketBrokerClusterManager clusterManager,
+      ObjectProvider<RSocketBrokerClusterManager> provider,
       BrokerRoutingClusterConnections clusterConnections,
       BrokerRoutingRSocketTable routingTable) {
     return new BrokerClusterServerController(
         properties,
-        clusterNode -> clusterManager.getConnectionEventPublisher().tryEmitNext(clusterNode),
+        clusterNode ->
+            provider.ifAvailable(
+                clusterManager ->
+                    clusterManager.getConnectionEventPublisher().tryEmitNext(clusterNode)),
         clusterConnections,
         routingTable);
   }

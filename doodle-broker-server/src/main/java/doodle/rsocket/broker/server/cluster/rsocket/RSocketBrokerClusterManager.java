@@ -38,6 +38,7 @@ import io.rsocket.RSocket;
 import io.rsocket.SocketAcceptor;
 import io.rsocket.core.DefaultConnectionSetupPayload;
 import io.rsocket.frame.SetupFrameCodec;
+import io.rsocket.loadbalance.WeightedStatsRequestInterceptor;
 import io.rsocket.transport.ClientTransport;
 import io.rsocket.util.DefaultPayload;
 import java.net.URI;
@@ -51,6 +52,7 @@ import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler;
 import reactor.core.Disposable;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 public class RSocketBrokerClusterManager {
@@ -94,10 +96,8 @@ public class RSocketBrokerClusterManager {
   }
 
   private Disposable onConnect(BrokerClusterNodeProperties clusterNode) {
-    //    logger.info("Starting connect to broker cluster node: {}", clusterNode);
-
+    logger.info("Starting connect to broker cluster node: {}", clusterNode);
     RSocketRequester requester = connect(clusterNode.getCluster(), localBrokerInfo, null, rSocket);
-
     return requester
         .route(REQUEST_CLUSTER_BROKER_INFO)
         .data(localBrokerInfo)
@@ -140,6 +140,20 @@ public class RSocketBrokerClusterManager {
     if (Objects.nonNull(setupMetaData)) {
       builder.setupMetadata(setupMetaData, ROUTING_FRAME_MIME_TYPE);
     }
+
+    builder.rsocketConnector(
+        rSocketConnector ->
+            rSocketConnector
+                .interceptors(
+                    ir ->
+                        ir.forRequestsInResponder(
+                            requesterRSocket -> {
+                              final WeightedStatsRequestInterceptor
+                                  weightedStatsRequestInterceptor =
+                                      new WeightedStatsRequestInterceptor();
+                              return weightedStatsRequestInterceptor;
+                            }))
+                .acceptor((setup, sendingSocket) -> Mono.just(rSocket)));
 
     ClientTransport clientTransport =
         transportFactories

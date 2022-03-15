@@ -51,7 +51,11 @@ public class BrokerRoutingRouteJoinListener implements Closeable {
                     Flux.fromIterable(clusterConnections.entries())
                         .flatMap(entry -> sendRouteJoin(entry, routeJoin)))
             .log()
-            .subscribe();
+            .subscribe(this::log);
+  }
+
+  private void log(RSocketRoutingRouteJoin routeJoin) {
+    System.out.println(routeJoin);
   }
 
   private Mono<RSocketRoutingRouteJoin> sendRouteJoin(

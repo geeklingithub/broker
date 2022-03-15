@@ -16,6 +16,7 @@
 package doodle.rsocket.broker.server.cluster;
 
 import java.net.URI;
+import java.util.StringJoiner;
 
 public class BrokerClusterNodeProperties {
   private URI proxy;
@@ -37,5 +38,13 @@ public class BrokerClusterNodeProperties {
   public BrokerClusterNodeProperties setCluster(URI cluster) {
     this.cluster = cluster;
     return this;
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", BrokerClusterNodeProperties.class.getSimpleName() + "[", "]")
+        .add("proxy=" + proxy)
+        .add("cluster=" + cluster)
+        .toString();
   }
 }
