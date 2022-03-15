@@ -16,34 +16,21 @@
 package doodle.samples.rsocket.broker.server;
 
 import doodle.rsocket.broker.server.EnableBrokerServer;
-import doodle.rsocket.broker.server.proxy.BrokerProxyServerInitializedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import reactor.core.publisher.Hooks;
 
 @EnableBrokerServer
 @SpringBootApplication
-public class SampleBrokerServerApplication {
-  private static final Logger logger = LoggerFactory.getLogger(SampleBrokerServerApplication.class);
-
-  @Bean
-  public ApplicationListener<BrokerProxyServerInitializedEvent> proxyListener() {
-    return (event) -> logger.info("Proxy bind!");
-  }
-
-  @Bean
-  public ApplicationListener<BrokerProxyServerInitializedEvent> clusterListener() {
-    return (event) -> logger.info("Cluster bind!");
-  }
+public class SampleBrokerServer3Application {
 
   public static void main(String[] args) {
     // a simple server will throw exception after client disconnected
     // https://github.com/rsocket/rsocket-java/issues/1018
     Hooks.onErrorDropped(__ -> {});
-    SpringApplication.run(SampleBrokerServerApplication.class, args);
+    new SpringApplicationBuilder()
+        .sources(SampleBrokerServer3Application.class)
+        .properties("spring.config.name=broker3")
+        .run(args);
   }
 }

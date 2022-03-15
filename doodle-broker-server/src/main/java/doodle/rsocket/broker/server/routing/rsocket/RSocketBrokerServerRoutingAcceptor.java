@@ -77,6 +77,7 @@ public class RSocketBrokerServerRoutingAcceptor implements BrokerServerRoutingAc
         if (routingFrame instanceof RSocketRoutingBrokerInfo) {
           RSocketRoutingBrokerInfo brokerInfo = (RSocketRoutingBrokerInfo) routingFrame;
           brokerInfoConsumer.accept(brokerInfo, sendingSocket);
+          return finalize(sendingSocket, doCleanup);
         } else if (routingFrame instanceof RSocketRoutingRouteSetup) { // RouteSetup frame required
           RSocketRoutingRouteSetup routeSetup = (RSocketRoutingRouteSetup) routingFrame;
           return Mono.defer(
