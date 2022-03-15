@@ -48,7 +48,7 @@ import reactor.netty.tcp.TcpServer;
 @ConditionalOnClass({TcpServerTransport.class, TcpServer.class})
 @AutoConfigureAfter({
   BrokerRSocketTransportConfiguration.class,
-  BrokerCusterServerMessagingConfiguration.class
+  BrokerClusterServerMessagingConfiguration.class
 })
 @ConditionalOnBean(BrokerProxyServerProperties.class) // ensure proxy server is starting
 @ConditionalOnProperty(prefix = PREFIX + ".cluster", name = "enabled", matchIfMissing = true)

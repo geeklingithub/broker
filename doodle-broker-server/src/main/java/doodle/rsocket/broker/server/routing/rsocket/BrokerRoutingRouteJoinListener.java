@@ -19,6 +19,7 @@ import static doodle.rsocket.broker.server.BrokerServerConstants.REQUEST_CLUSTER
 
 import doodle.rsocket.broker.core.routing.RSocketRoutingRouteJoin;
 import doodle.rsocket.broker.server.config.BrokerServerProperties;
+import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingConnections.BrokerInfoEntry;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.function.Predicate;
@@ -49,12 +50,12 @@ public class BrokerRoutingRouteJoinListener implements Closeable {
                 routeJoin ->
                     Flux.fromIterable(clusterConnections.entries())
                         .flatMap(entry -> sendRouteJoin(entry, routeJoin)))
+            .log()
             .subscribe();
   }
 
   private Mono<RSocketRoutingRouteJoin> sendRouteJoin(
-      BrokerRoutingConnections.BrokerInfoEntry<RSocketRequester> entry,
-      RSocketRoutingRouteJoin routeJoin) {
+      BrokerInfoEntry<RSocketRequester> entry, RSocketRoutingRouteJoin routeJoin) {
     logger.info("Sending RouteJoin {} to {}", routeJoin, entry.getBrokerInfo());
     RSocketRequester requester = entry.getValue();
     return requester

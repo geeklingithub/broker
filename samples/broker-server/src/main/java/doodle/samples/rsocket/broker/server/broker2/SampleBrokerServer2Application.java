@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.samples.rsocket.broker.server;
+package doodle.samples.rsocket.broker.server.broker2;
 
 import doodle.rsocket.broker.server.EnableBrokerServer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

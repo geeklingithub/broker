@@ -25,7 +25,7 @@ import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHa
 
 @SpringBootConfiguration(proxyBeanMethods = false)
 @AutoConfigureAfter(RSocketMessagingAutoConfiguration.class)
-public class BrokerCusterServerMessagingConfiguration {
+public class BrokerClusterServerMessagingConfiguration {
 
   @Bean
   @ConditionalOnMissingBean

@@ -28,12 +28,11 @@ public final class BrokerServerConstants {
       System.getProperty(
           PREFIX + ".routing.loadbalance-strategy", RSOCKET_SERVER_ROUTING_ROUND_ROBIN_LB_STRATEGY);
 
-  public static final String REQUEST_CLUSTER_BROKER_INFO = "broker-cluster.broker-info";
+  public static final String REQUEST_CLUSTER_BROKER_INFO = "cluster.broker-info";
 
-  public static final String REQUEST_CLUSTER_REMOTE_BROKER_INFO =
-      "broker-cluster.remote-broker-info";
+  public static final String REQUEST_CLUSTER_REMOTE_BROKER_INFO = "cluster.remote-broker-info";
 
-  public static final String REQUEST_CLUSTER_ROUTE_JOIN = "broker-cluster.route-join";
+  public static final String REQUEST_CLUSTER_ROUTE_JOIN = "cluster.route-join";
 
   private BrokerServerConstants() {}
 }

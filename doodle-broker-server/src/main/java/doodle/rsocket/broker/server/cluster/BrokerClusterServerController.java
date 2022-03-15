@@ -115,7 +115,7 @@ public class BrokerClusterServerController {
   public Mono<RSocketRoutingRouteJoin> handleRouteJoin(RSocketRoutingRouteJoin routeJoin) {
     logger.info("Received RouteJoin {}", routeJoin);
     RSocketRoutingBrokerInfo brokerInfo =
-        RSocketRoutingBrokerInfo.from(properties.getBrokerId()).build();
+        RSocketRoutingBrokerInfo.from(routeJoin.getBrokerId()).build();
     if (!clusterConnections.contains(brokerInfo)) {
       return Mono.error(new ApplicationErrorException("No connection for broker " + brokerInfo));
     }

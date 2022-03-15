@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.samples.rsocket.broker.app;
+package doodle.samples.rsocket.broker.server.broker1;
 
-import doodle.rsocket.broker.client.EnableBrokerClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
+import doodle.rsocket.broker.server.EnableBrokerServer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import reactor.core.publisher.Hooks;
 
-@EnableBrokerClient
+@EnableBrokerServer
 @SpringBootApplication
-public class SampleBrokerApplication {
-
-  private static final Logger logger = LoggerFactory.getLogger(SampleBrokerApplication.class);
+public class SampleBrokerServer1Application {
 
   public static void main(String[] args) {
-    SpringApplication.run(SampleBrokerApplication.class, args);
+    // a simple server will throw exception after client disconnected
+    // https://github.com/rsocket/rsocket-java/issues/1018
+    Hooks.onErrorDropped(__ -> {});
+    new SpringApplicationBuilder()
+        .sources(SampleBrokerServer1Application.class)
+        .properties("spring.config.name=broker1")
+        .run(args);
   }
 }

@@ -62,14 +62,12 @@ public class RSocketRoutingBrokerInfo extends RSocketRoutingFrame {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     RSocketRoutingBrokerInfo that = (RSocketRoutingBrokerInfo) o;
-    return timestamp == that.timestamp
-        && Objects.equals(brokerId, that.brokerId)
-        && Objects.equals(tags, that.tags);
+    return Objects.equals(brokerId, that.brokerId) && Objects.equals(tags, that.tags);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(brokerId, timestamp, tags);
+    return Objects.hash(brokerId, tags);
   }
 
   @Override

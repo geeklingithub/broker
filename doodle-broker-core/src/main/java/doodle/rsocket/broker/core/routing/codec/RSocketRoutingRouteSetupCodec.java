@@ -32,11 +32,13 @@ public final class RSocketRoutingRouteSetupCodec {
   public static ByteBuf encode(
       ByteBufAllocator allocator,
       RSocketRoutingRouteId routeId,
+      String serviceName,
       RSocketRoutingTags tags,
       int flags) {
     Objects.requireNonNull(routeId);
     ByteBuf byteBuf = RSocketRoutingFrameHeaderCodec.encode(allocator, ROUTE_SETUP, flags);
     encodeRouteId(byteBuf, routeId);
+    encodeByteString(byteBuf, serviceName);
     encodeTag(byteBuf, tags);
     return byteBuf;
   }

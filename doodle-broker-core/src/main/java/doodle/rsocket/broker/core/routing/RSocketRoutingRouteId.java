@@ -16,7 +16,6 @@
 package doodle.rsocket.broker.core.routing;
 
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.UUID;
 
 public class RSocketRoutingRouteId {
@@ -71,9 +70,6 @@ public class RSocketRoutingRouteId {
 
   @Override
   public String toString() {
-    return new StringJoiner(", ", RSocketRoutingRouteId.class.getSimpleName() + "[", "]")
-        .add("msb=" + msb)
-        .add("lsb=" + lsb)
-        .toString();
+    return "RSocketRoutingRouteId{" + new UUID(msb, lsb) + '}';
   }
 }
