@@ -18,7 +18,6 @@ package doodle.rsocket.broker.core.routing;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 import org.springframework.util.StringUtils;
 
 public enum RSocketRoutingWellKnownKey {
@@ -86,10 +85,6 @@ public enum RSocketRoutingWellKnownKey {
 
   @Override
   public String toString() {
-    return new StringJoiner(", ", RSocketRoutingWellKnownKey.class.getSimpleName() + "[", "]")
-        .add("identifier=" + identifier)
-        .add("str='" + str + "'")
-        .add("key=" + key)
-        .toString();
+    return str;
   }
 }
