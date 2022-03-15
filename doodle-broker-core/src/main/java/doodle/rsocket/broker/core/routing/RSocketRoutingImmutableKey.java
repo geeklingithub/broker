@@ -16,6 +16,7 @@
 package doodle.rsocket.broker.core.routing;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class RSocketRoutingImmutableKey implements RSocketRoutingKey {
 
@@ -60,12 +61,9 @@ public class RSocketRoutingImmutableKey implements RSocketRoutingKey {
 
   @Override
   public String toString() {
-    return "RSocketRoutingImmutableKey{"
-        + "wellKnownKey="
-        + wellKnownKey
-        + ", key='"
-        + key
-        + '\''
-        + '}';
+    return new StringJoiner(", ", RSocketRoutingImmutableKey.class.getSimpleName() + "[", "]")
+        .add("wellKnownKey=" + wellKnownKey)
+        .add("key='" + key + "'")
+        .toString();
   }
 }

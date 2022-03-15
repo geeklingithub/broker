@@ -4,3 +4,7 @@ doodle.rsocket.broker.server:
     port: 8001
   cluster:
     port: 9001
+    nodes:
+      - proxy: tcp://localhost:8002
+        cluster: tcp://localhost:9002
+
