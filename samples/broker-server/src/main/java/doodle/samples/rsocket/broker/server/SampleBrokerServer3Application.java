@@ -18,7 +18,6 @@ package doodle.samples.rsocket.broker.server;
 import doodle.rsocket.broker.server.EnableBrokerServer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import reactor.core.publisher.Hooks;
 
 @EnableBrokerServer
 @SpringBootApplication
@@ -27,7 +26,7 @@ public class SampleBrokerServer3Application {
   public static void main(String[] args) {
     // a simple server will throw exception after client disconnected
     // https://github.com/rsocket/rsocket-java/issues/1018
-    Hooks.onErrorDropped(__ -> {});
+    //    Hooks.onErrorDropped(__ -> {});
     new SpringApplicationBuilder()
         .sources(SampleBrokerServer3Application.class)
         .properties("spring.config.name=broker3")

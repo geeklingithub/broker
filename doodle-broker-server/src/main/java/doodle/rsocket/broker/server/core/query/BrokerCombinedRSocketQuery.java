@@ -85,7 +85,7 @@ public class BrokerCombinedRSocketQuery implements BrokerRSocketQuery {
     foundStore.clear();
 
     for (RSocketRoutingRouteJoin routeJoin : routingTable.find(tags)) {
-      RSocketRoutingRouteId joinedBrokerId = routeJoin.getRouteId();
+      RSocketRoutingRouteId joinedBrokerId = routeJoin.getBrokerId();
       if (!Objects.equals(this.brokerId, joinedBrokerId) && !foundStore.contains(joinedBrokerId)) {
         foundStore.add(joinedBrokerId);
 

@@ -56,7 +56,7 @@ public abstract class BrokerRoutingConnections<CONNECTION> {
   }
 
   public CONNECTION put(RSocketRoutingBrokerInfo brokerInfo, CONNECTION connection) {
-    logger.debug("adding {} RSocket {}", brokerInfo, connection);
+    logger.info("Adding {} RSocket {}", brokerInfo, connection);
     BrokerInfoEntry<CONNECTION> entry = new BrokerInfoEntry<>(connection, brokerInfo);
     BrokerInfoEntry<CONNECTION> old = connections.put(brokerInfo.getBrokerId(), entry);
     if (Objects.isNull(old)) { // new connection
