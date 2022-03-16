@@ -21,12 +21,15 @@ import doodle.rsocket.broker.server.transport.BrokerRSocketServerFactory;
 import doodle.rsocket.broker.server.transport.ConfigurableBrokerRSocketServerFactory;
 import io.rsocket.SocketAcceptor;
 import io.rsocket.core.RSocketServer;
+import io.rsocket.transport.ServerTransport;
 import io.rsocket.transport.netty.server.CloseableChannel;
 import io.rsocket.transport.netty.server.TcpServerTransport;
+import io.rsocket.transport.netty.server.WebsocketServerTransport;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.time.Duration;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.server.HttpServer;
 import reactor.netty.tcp.TcpServer;
 
 public class NettyBrokerRSocketServerFactory
@@ -40,13 +43,28 @@ public class NettyBrokerRSocketServerFactory
 
   @Override
   public BrokerRSocketServer createServer(SocketAcceptor socketAcceptor) {
-    // TODO: 2022/3/14 websocket support
-    TcpServer tcpServer =
-        TcpServer.create().bindAddress(() -> new InetSocketAddress(uri.getHost(), uri.getPort()));
-    TcpServerTransport serverTransport = TcpServerTransport.create(tcpServer);
+    ServerTransport<CloseableChannel> serverTransport = createServerTransport();
     Mono<CloseableChannel> serverStarter =
         RSocketServer.create().acceptor(socketAcceptor).bind(serverTransport);
     return new NettyBrokerRSocketServer(serverStarter, lifecycleTimeout);
+  }
+
+  private ServerTransport<CloseableChannel> createServerTransport() {
+    return (transport == BrokerRSocketTransport.TCP)
+        ? createTcpServerTransport()
+        : createWebSocketServerTransport();
+  }
+
+  private ServerTransport<CloseableChannel> createWebSocketServerTransport() {
+    return WebsocketServerTransport.create(HttpServer.create().bindAddress(this::getListenAddress));
+  }
+
+  private ServerTransport<CloseableChannel> createTcpServerTransport() {
+    return TcpServerTransport.create(TcpServer.create().bindAddress(this::getListenAddress));
+  }
+
+  private InetSocketAddress getListenAddress() {
+    return new InetSocketAddress(uri.getHost(), uri.getPort());
   }
 
   @Override
