@@ -15,6 +15,8 @@
  */
 package doodle.rsocket.broker.core.routing.codec;
 
+import static doodle.rsocket.broker.core.routing.RSocketRoutingWellKnownKey.fromIdentifier;
+
 import doodle.rsocket.broker.core.routing.RSocketRoutingKey;
 import doodle.rsocket.broker.core.routing.RSocketRoutingTags;
 import doodle.rsocket.broker.core.routing.RSocketRoutingTagsBuilder;
@@ -93,8 +95,7 @@ public final class RSocketRoutingTagsCodec {
 
       RSocketRoutingKey key;
       if (isWellKnownTag) {
-        RSocketRoutingWellKnownKey wellKnownKey =
-            RSocketRoutingWellKnownKey.fromIdentifier(keyLengthOrId);
+        RSocketRoutingWellKnownKey wellKnownKey = fromIdentifier(keyLengthOrId);
         key = RSocketRoutingKey.of(wellKnownKey);
       } else {
         String keyString = byteBuf.toString(offset, keyLengthOrId, StandardCharsets.UTF_8);
