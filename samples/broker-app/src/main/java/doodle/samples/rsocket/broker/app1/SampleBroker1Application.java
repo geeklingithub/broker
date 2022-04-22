@@ -20,7 +20,6 @@ import java.util.concurrent.CountDownLatch;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import reactor.core.publisher.Hooks;
 
 @EnableScheduling
 @EnableBrokerClient
@@ -30,7 +29,7 @@ public class SampleBroker1Application {
   public static void main(String[] args) throws InterruptedException {
     // a simple server will throw exception after client disconnected
     // https://github.com/rsocket/rsocket-java/issues/1018
-    Hooks.onErrorDropped(__ -> {});
+    //    Hooks.onErrorDropped(__ -> {});
     final CountDownLatch countDownLatch = new CountDownLatch(1);
     new SpringApplicationBuilder()
         .sources(SampleBroker1Application.class)

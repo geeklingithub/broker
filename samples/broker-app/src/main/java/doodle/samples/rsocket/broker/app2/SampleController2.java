@@ -21,6 +21,7 @@ import doodle.rsocket.broker.client.config.BrokerClientProperties;
 import doodle.rsocket.broker.client.rsocket.BrokerRSocketRequester;
 import doodle.rsocket.broker.core.routing.RSocketRoutingAddress;
 import doodle.rsocket.broker.core.routing.RSocketRoutingAddressBuilder;
+import doodle.samples.rsocket.broker.common.SampleEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,8 @@ public class SampleController2 {
   }
 
   @MessageMapping("app2.sample")
-  public Mono<String> sample() {
-    return Mono.just("sample2");
+  public Mono<SampleEvent> sample() {
+    return Mono.fromSupplier(SampleEvent::new);
   }
 
   @Scheduled(fixedDelay = 1000, initialDelay = 1000)

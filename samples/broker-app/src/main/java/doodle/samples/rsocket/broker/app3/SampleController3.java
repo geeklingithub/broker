@@ -21,6 +21,7 @@ import doodle.rsocket.broker.client.config.BrokerClientProperties;
 import doodle.rsocket.broker.client.rsocket.BrokerRSocketRequester;
 import doodle.rsocket.broker.core.routing.RSocketRoutingAddress;
 import doodle.rsocket.broker.core.routing.RSocketRoutingAddressBuilder;
+import doodle.samples.rsocket.broker.common.SampleEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,12 @@ public class SampleController3 {
     rSocketRequester
         .route("app2.sample")
         .metadata(addressBuilder.with("instance-name", "sample2").build(), ROUTING_FRAME_MIME_TYPE)
-        .retrieveMono(String.class)
+        .retrieveMono(SampleEvent.class)
         .subscribe(this::logoutMsg);
+  }
+
+  private void logoutMsg(SampleEvent sampleEvent) {
+    logger.info("Received event {}", sampleEvent);
   }
 
   private void logoutMsg(String s) {

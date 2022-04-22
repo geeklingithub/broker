@@ -16,12 +16,25 @@
   <packaging>pom</packaging>
 
   <properties>
-    <parameter.spotless.license>${project.basedir}/../../checkstyle/license-header.txt</parameter.spotless.license>
+    <parameter.spotless.license>
+      ${project.basedir}/../../checkstyle/license-header.txt
+    </parameter.spotless.license>
   </properties>
 
   <modules>
     <module>broker-app</module>
+    <module>broker-common</module>
     <module>broker-server</module>
   </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>doodle</groupId>
+        <artifactId>broker-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>

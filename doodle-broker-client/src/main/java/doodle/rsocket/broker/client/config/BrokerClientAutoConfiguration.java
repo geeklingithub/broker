@@ -28,6 +28,7 @@ import doodle.rsocket.broker.core.transport.netty.NettyBrokerClientRSocketTransp
 import io.rsocket.RSocket;
 import io.rsocket.transport.ClientTransport;
 import java.net.URI;
+import java.time.Duration;
 import java.util.Objects;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringBootConfiguration;
@@ -44,6 +45,8 @@ import org.springframework.messaging.rsocket.RSocketConnectorConfigurer;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler;
+import org.springframework.util.MimeTypeUtils;
+import reactor.util.retry.Retry;
 
 @SpringBootConfiguration(proxyBeanMethods = false)
 @ConditionalOnBean(BrokerClientMarkerConfiguration.Marker.class)
@@ -65,7 +68,10 @@ public class BrokerClientAutoConfiguration {
   @ConditionalOnMissingBean
   public RSocketConnectorConfigurer rSocketConnectorConfigurer(
       RSocketMessageHandler messageHandler) { // spring messaging bridge
-    return (connector) -> connector.acceptor(messageHandler.responder());
+    return (connector) ->
+        connector
+            .acceptor(messageHandler.responder())
+            .reconnect(Retry.fixedDelay(Long.MAX_VALUE, Duration.ofSeconds(5)));
   }
 
   @Bean
@@ -94,7 +100,9 @@ public class BrokerClientAutoConfiguration {
         RSocketRequester.builder()
             .setupMetadata(routeSetup.build(), ROUTING_FRAME_MIME_TYPE)
             .dataMimeType(
-                Objects.nonNull(properties.getDataMimeType()) ? properties.getDataMimeType() : null)
+                Objects.nonNull(properties.getDataMimeType())
+                    ? properties.getDataMimeType()
+                    : MimeTypeUtils.APPLICATION_JSON)
             .rsocketStrategies(strategies)
             .rsocketConnector(configurer);
 

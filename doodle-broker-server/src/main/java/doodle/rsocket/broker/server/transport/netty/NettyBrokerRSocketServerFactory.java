@@ -28,6 +28,8 @@ import io.rsocket.transport.netty.server.WebsocketServerTransport;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.time.Duration;
+
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.server.HttpServer;
 import reactor.netty.tcp.TcpServer;
@@ -64,6 +66,9 @@ public class NettyBrokerRSocketServerFactory
   }
 
   private InetSocketAddress getListenAddress() {
+    if (!StringUtils.hasLength(uri.getHost())) {
+      return new InetSocketAddress(uri.getPort());
+    }
     return new InetSocketAddress(uri.getHost(), uri.getPort());
   }
 
