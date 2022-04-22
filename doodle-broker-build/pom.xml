@@ -21,18 +21,6 @@
     <parameter.spotless.license>${project.basedir}/../checkstyle/license-header.txt</parameter.spotless.license>
   </properties>
 
-
-  <distributionManagement>
-    <repository>
-      <id>rdc-releases</id>
-      <url>https://repo.rdc.aliyun.com/repository/40078-release-EMO6b4/</url>
-    </repository>
-    <snapshotRepository>
-      <id>rdc-snapshots</id>
-      <url>https://repo.rdc.aliyun.com/repository/40078-snapshot-nQlKEj/</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <build>
     <plugins>
       <plugin>
