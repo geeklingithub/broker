@@ -66,9 +66,6 @@ public class NettyBrokerRSocketServerFactory
   }
 
   private InetSocketAddress getListenAddress() {
-    if (uri.getHost().equalsIgnoreCase("_")) {
-      return new InetSocketAddress(uri.getPort());
-    }
     return new InetSocketAddress(uri.getHost(), uri.getPort());
   }
 
