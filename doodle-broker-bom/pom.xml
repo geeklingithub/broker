@@ -49,27 +49,27 @@
       <dependency>
         <groupId>doodle</groupId>
         <artifactId>doodle-broker-client</artifactId>
-        <version>${project.version}</version>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>doodle</groupId>
         <artifactId>doodle-broker-starter-client</artifactId>
-        <version>${project.version}</version>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>doodle</groupId>
         <artifactId>doodle-broker-core</artifactId>
-        <version>${project.version}</version>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>doodle</groupId>
         <artifactId>doodle-broker-server</artifactId>
-        <version>${project.version}</version>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>doodle</groupId>
         <artifactId>doodle-broker-starter-server</artifactId>
-        <version>${project.version}</version>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
