@@ -22,6 +22,7 @@ import doodle.rsocket.broker.client.rsocket.BrokerRSocketRequester;
 import doodle.rsocket.broker.client.rsocket.BrokerRSocketRequesterBuilder;
 import doodle.rsocket.broker.core.routing.RSocketRoutingRouteSetup;
 import doodle.rsocket.broker.core.routing.RSocketRoutingRouteSetupBuilder;
+import doodle.rsocket.broker.core.routing.RSocketRoutingSetupBuilderCustomizer;
 import doodle.rsocket.broker.core.routing.config.BrokerRSocketStrategiesAutoConfiguration;
 import doodle.rsocket.broker.core.transport.BrokerClientRSocketTransportFactory;
 import doodle.rsocket.broker.core.transport.netty.NettyBrokerClientRSocketTransportFactory;
@@ -80,7 +81,8 @@ public class BrokerClientAutoConfiguration {
   public BrokerRSocketRequesterBuilder brokerRSocketRequesterBuilder(
       BrokerClientProperties properties,
       RSocketConnectorConfigurer configurer,
-      RSocketStrategies strategies) {
+      RSocketStrategies strategies,
+      ObjectProvider<RSocketRoutingSetupBuilderCustomizer> customizers) {
 
     RSocketRoutingRouteSetupBuilder routeSetup =
         RSocketRoutingRouteSetup.from(properties.getRouteId(), properties.getServiceName());
@@ -95,6 +97,8 @@ public class BrokerClientAutoConfiguration {
                 routeSetup.with(key.getKey(), value);
               }
             });
+
+    customizers.orderedStream().forEach((customizer) -> customizer.customize(routeSetup));
 
     RSocketRequester.Builder builder =
         RSocketRequester.builder()
