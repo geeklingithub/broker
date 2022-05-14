@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package doodle.samples.rsocket.broker.app2;
+package doodle.samples.rsocket.broker.app3;
 
 import doodle.rsocket.broker.client.EnableBrokerClient;
 import java.util.concurrent.CountDownLatch;
@@ -25,16 +25,13 @@ import reactor.core.publisher.Hooks;
 @EnableScheduling
 @EnableBrokerClient
 @SpringBootApplication
-public class SampleBroker2Application {
-
-  public static void main(String[] args) throws InterruptedException {
-    // a simple server will throw exception after client disconnected
-    // https://github.com/rsocket/rsocket-java/issues/1018
+public class Sample3Application {
+  public static void main(String[] args) throws Exception {
     Hooks.onErrorDropped(__ -> {});
     final CountDownLatch countDownLatch = new CountDownLatch(1);
     new SpringApplicationBuilder()
-        .sources(SampleBroker2Application.class)
-        .properties("spring.config.name=app2")
+        .sources(Sample3Application.class)
+        .properties("spring.config.name=app3")
         .run(args);
     countDownLatch.await();
   }

@@ -2,5 +2,6 @@ doodle.rsocket.broker.client:
   serviceName: sample2
   tags:
     instance-name: sample2
+    instance-type: sample
   brokers:
     - tcp://localhost:8002
