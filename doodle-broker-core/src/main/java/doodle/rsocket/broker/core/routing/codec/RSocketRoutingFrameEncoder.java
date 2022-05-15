@@ -105,7 +105,11 @@ public class RSocketRoutingFrameEncoder extends AbstractEncoder<RSocketRoutingFr
         RSocketRoutingAddress address = (RSocketRoutingAddress) routingFrame;
         encoded =
             RSocketRoutingAddressCodec.encode(
-                allocator, address.getTags(), address.getOriginRouteId(), routingFrame.getFlags());
+                allocator,
+                address.getTags(),
+                address.getOriginRouteId(),
+                address.getBrokerId(),
+                routingFrame.getFlags());
         break;
       default:
         throw new IllegalArgumentException("Unknown rsocket routing frame type " + frameType);

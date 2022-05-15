@@ -25,10 +25,13 @@ public class RSocketRoutingAddressBuilder
 
   // TODO: 2021/7/21 add metadata tags?
   private final RSocketRoutingRouteId originRouteId;
+  private final RSocketRoutingRouteId brokerId;
   private int flags = FLAGS_U; // default UNICAST
 
-  RSocketRoutingAddressBuilder(RSocketRoutingRouteId originRouteId) {
+  RSocketRoutingAddressBuilder(
+      RSocketRoutingRouteId originRouteId, RSocketRoutingRouteId brokerId) {
     this.originRouteId = Objects.requireNonNull(originRouteId);
+    this.brokerId = Objects.requireNonNull(brokerId);
   }
 
   public RSocketRoutingAddressBuilder flags(int flags) {
@@ -49,6 +52,6 @@ public class RSocketRoutingAddressBuilder
     if (tags.isEmpty()) {
       throw new IllegalArgumentException("RSocket routing address tags CAN NOT be null");
     }
-    return new RSocketRoutingAddress(this.originRouteId, tags, this.flags);
+    return new RSocketRoutingAddress(this.originRouteId, this.brokerId, tags, this.flags);
   }
 }

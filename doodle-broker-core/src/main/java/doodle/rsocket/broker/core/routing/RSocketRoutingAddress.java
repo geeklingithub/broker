@@ -23,22 +23,31 @@ import java.util.StringJoiner;
 public class RSocketRoutingAddress extends RSocketRoutingFrame {
 
   private final RSocketRoutingRouteId originRouteId;
+  private final RSocketRoutingRouteId brokerId;
   private final RSocketRoutingTags tags;
 
-  public static RSocketRoutingAddressBuilder from(RSocketRoutingRouteId originRouteId) {
-    return new RSocketRoutingAddressBuilder(originRouteId);
+  public static RSocketRoutingAddressBuilder from(
+      RSocketRoutingRouteId originRouteId, RSocketRoutingRouteId brokerId) {
+    return new RSocketRoutingAddressBuilder(originRouteId, brokerId);
   }
 
   public static RSocketRoutingAddress from(ByteBuf byteBuf, int flags) {
-    return from(RSocketRoutingAddressCodec.originRouteId(byteBuf))
+    return from(
+            RSocketRoutingAddressCodec.originRouteId(byteBuf),
+            RSocketRoutingAddressCodec.brokerId(byteBuf))
         .with(RSocketRoutingAddressCodec.tags(byteBuf))
         .flags(flags)
         .build();
   }
 
-  RSocketRoutingAddress(RSocketRoutingRouteId originRouteId, RSocketRoutingTags tags, int flags) {
+  RSocketRoutingAddress(
+      RSocketRoutingRouteId originRouteId,
+      RSocketRoutingRouteId brokerId,
+      RSocketRoutingTags tags,
+      int flags) {
     super(RSocketRoutingFrameType.ADDRESS, flags);
     this.originRouteId = originRouteId;
+    this.brokerId = brokerId;
     this.tags = tags;
   }
 
@@ -51,6 +60,10 @@ public class RSocketRoutingAddress extends RSocketRoutingFrame {
     return originRouteId;
   }
 
+  public RSocketRoutingRouteId getBrokerId() {
+    return brokerId;
+  }
+
   public RSocketRoutingTags getTags() {
     return tags;
   }
@@ -60,18 +73,21 @@ public class RSocketRoutingAddress extends RSocketRoutingFrame {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     RSocketRoutingAddress that = (RSocketRoutingAddress) o;
-    return Objects.equals(originRouteId, that.originRouteId) && Objects.equals(tags, that.tags);
+    return Objects.equals(originRouteId, that.originRouteId)
+        && Objects.equals(brokerId, that.brokerId)
+        && Objects.equals(tags, that.tags);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(originRouteId, tags);
+    return Objects.hash(originRouteId, brokerId, tags);
   }
 
   @Override
   public String toString() {
     return new StringJoiner(", ", RSocketRoutingAddress.class.getSimpleName() + "[", "]")
         .add("originRouteId=" + originRouteId)
+        .add("brokerId=" + brokerId)
         .add("tags=" + tags)
         .toString();
   }

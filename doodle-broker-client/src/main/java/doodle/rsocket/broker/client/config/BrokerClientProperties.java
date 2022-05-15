@@ -20,9 +20,9 @@ import static doodle.rsocket.broker.core.routing.RSocketRoutingRouteId.random;
 
 import doodle.rsocket.broker.core.routing.RSocketRoutingMutableKey;
 import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
-import java.net.URI;
 import java.util.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.MimeType;
 
 @ConfigurationProperties(PREFIX)
@@ -36,7 +36,7 @@ public class BrokerClientProperties {
 
   private MimeType dataMimeType;
 
-  private final List<URI> brokers = new ArrayList<>();
+  @NestedConfigurationProperty private BrokerProperties broker = new BrokerProperties();
 
   public RSocketRoutingRouteId getRouteId() {
     return routeId;
@@ -66,8 +66,8 @@ public class BrokerClientProperties {
     this.dataMimeType = dataMimeType;
   }
 
-  public List<URI> getBrokers() {
-    return brokers;
+  public BrokerProperties getBroker() {
+    return broker;
   }
 
   @Override
@@ -77,7 +77,7 @@ public class BrokerClientProperties {
         .add("serviceName='" + serviceName + "'")
         .add("tags=" + tags)
         .add("dataMimeType=" + dataMimeType)
-        .add("brokers=" + brokers)
+        .add("broker=" + broker)
         .toString();
   }
 }

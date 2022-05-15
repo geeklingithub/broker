@@ -15,11 +15,11 @@
  */
 package doodle.rsocket.broker.server.core.query;
 
-import doodle.rsocket.broker.core.routing.RSocketRoutingTags;
+import doodle.rsocket.broker.core.routing.RSocketRoutingAddress;
 import io.rsocket.RSocket;
 import java.util.List;
 
 @FunctionalInterface
 public interface BrokerRSocketQuery {
-  List<RSocket> query(RSocketRoutingTags tags); // query by tags
+  List<RSocket> query(RSocketRoutingAddress address); // query by tags
 }

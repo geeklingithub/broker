@@ -51,7 +51,7 @@ public class BrokerUnicastRSocketLocator implements BrokerRSocketLocator {
 
   @Override
   public RSocket locate(RSocketRoutingAddress address) {
-    List<RSocket> rSockets = rSocketQuery.query(address.getTags());
+    List<RSocket> rSockets = rSocketQuery.query(address);
     final int size = rSockets.size();
     switch (size) {
       case 0:

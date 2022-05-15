@@ -3,5 +3,6 @@ doodle.rsocket.broker.client:
   tags:
     instance-name: sample1
     instance-type: sample
-  brokers:
-    - tcp://localhost:8001
+  broker:
+    uri: tcp://localhost:8001
+    brokerId: 00000000-0000-0000-0000-00000001

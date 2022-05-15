@@ -28,7 +28,6 @@ import doodle.rsocket.broker.core.transport.BrokerClientRSocketTransportFactory;
 import doodle.rsocket.broker.core.transport.netty.NettyBrokerClientRSocketTransportFactory;
 import io.rsocket.RSocket;
 import io.rsocket.transport.ClientTransport;
-import java.net.URI;
 import java.time.Duration;
 import java.util.Objects;
 import org.springframework.beans.factory.ObjectProvider;
@@ -119,18 +118,23 @@ public class BrokerClientAutoConfiguration {
       BrokerRSocketRequesterBuilder builder,
       BrokerClientProperties properties,
       ObjectProvider<BrokerClientRSocketTransportFactory> transportFactories) {
-    if (properties.getBrokers().isEmpty()) {
-      throw new IllegalStateException(PREFIX + ".brokers can not be empty!");
+
+    BrokerProperties broker = properties.getBroker();
+
+    if (Objects.isNull(broker.getUri())) {
+      throw new IllegalStateException(PREFIX + ".broker uri can not be null!");
     }
 
-    URI broker = properties.getBrokers().get(0);
+    if (Objects.isNull(broker.getBrokerId())) {
+      throw new IllegalStateException(PREFIX + ".broker id can not be null!");
+    }
 
     ClientTransport clientTransport =
         transportFactories
             .orderedStream()
-            .filter(transportFactory -> transportFactory.supports(broker))
+            .filter(transportFactory -> transportFactory.supports(broker.getUri()))
             .findFirst()
-            .map(transportFactory -> transportFactory.create(broker))
+            .map(transportFactory -> transportFactory.create(broker.getUri()))
             .orElseThrow(() -> new IllegalStateException("Unknown transport: " + broker));
 
     BrokerRSocketRequester requester = builder.transport(clientTransport);

@@ -17,9 +17,9 @@ package doodle.samples.rsocket.broker.app1;
 
 import static doodle.rsocket.broker.core.routing.RSocketRoutingMimeTypes.ROUTING_FRAME_MIME_TYPE;
 
+import doodle.rsocket.broker.client.config.BrokerClientProperties;
 import doodle.rsocket.broker.client.rsocket.BrokerRSocketRequester;
 import doodle.rsocket.broker.core.routing.RSocketRoutingAddress;
-import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -35,11 +35,12 @@ public class SampleController1 {
   private final RSocketRoutingAddress unicastAddress;
 
   @Autowired
-  public SampleController1(BrokerRSocketRequester rSocketRequester) {
+  public SampleController1(
+      BrokerClientProperties properties, BrokerRSocketRequester rSocketRequester) {
     this.rSocketRequester = Objects.requireNonNull(rSocketRequester);
 
     this.unicastAddress =
-        RSocketRoutingAddress.from(RSocketRoutingRouteId.random())
+        RSocketRoutingAddress.from(properties.getRouteId(), properties.getBroker().getBrokerId())
             .with("instance-name", "sample2")
             .build();
   }

@@ -17,10 +17,7 @@ package doodle.rsocket.broker.server.core.query;
 
 import static doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo.from;
 
-import doodle.rsocket.broker.core.routing.RSocketRoutingBrokerInfo;
-import doodle.rsocket.broker.core.routing.RSocketRoutingRouteId;
-import doodle.rsocket.broker.core.routing.RSocketRoutingRouteJoin;
-import doodle.rsocket.broker.core.routing.RSocketRoutingTags;
+import doodle.rsocket.broker.core.routing.*;
 import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketIndex;
 import doodle.rsocket.broker.server.routing.rsocket.BrokerRoutingRSocketTable;
 import io.netty.util.concurrent.FastThreadLocal;
@@ -68,7 +65,8 @@ public class BrokerCombinedRSocketQuery implements BrokerRSocketQuery {
   }
 
   @Override
-  public List<RSocket> query(RSocketRoutingTags tags) {
+  public List<RSocket> query(RSocketRoutingAddress address) {
+    RSocketRoutingTags tags = address.getTags();
     if (Objects.isNull(tags) || tags.isEmpty()) {
       throw new IllegalArgumentException("tags can not be empty!");
     }
@@ -79,6 +77,10 @@ public class BrokerCombinedRSocketQuery implements BrokerRSocketQuery {
     List<RSocket> rSockets = routingIndex.query(tags);
     if (Objects.nonNull(rSockets) && !rSockets.isEmpty()) {
       rSocketStored.addAll(rSockets);
+    }
+
+    if (!address.getBrokerId().equals(brokerId)) {
+      return rSocketStored;
     }
 
     Set<RSocketRoutingRouteId> foundStore = FOUND_STORE.get();
