@@ -25,6 +25,7 @@
     <module>broker-app</module>
     <module>broker-common</module>
     <module>broker-server</module>
+    <module>protobuf-app</module>
   </modules>
 
   <dependencyManagement>
