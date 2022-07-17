@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>doodle</groupId>
+    <groupId>doodle.broker.samples</groupId>
     <artifactId>samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
@@ -17,8 +17,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>doodle</groupId>
-      <artifactId>doodle-broker-starter-client</artifactId>
+      <groupId>doodle.broker</groupId>
+      <artifactId>broker-starter-client</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.protobuf</groupId>

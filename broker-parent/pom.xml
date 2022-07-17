@@ -6,13 +6,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>doodle</groupId>
-    <artifactId>doodle-broker</artifactId>
+    <groupId>doodle.broker</groupId>
+    <artifactId>broker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>doodle-broker-parent</artifactId>
+  <artifactId>broker-parent</artifactId>
   <packaging>pom</packaging>
 
   <properties>
@@ -22,8 +22,8 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>doodle</groupId>
-        <artifactId>doodle-broker-bom</artifactId>
+        <groupId>doodle.broker</groupId>
+        <artifactId>broker-bom</artifactId>
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>

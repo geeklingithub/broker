@@ -6,23 +6,23 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>doodle</groupId>
+    <groupId>doodle.broker.samples</groupId>
     <artifactId>samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>broker-server</artifactId>
+  <artifactId>server</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
-      <groupId>doodle</groupId>
-      <artifactId>broker-common</artifactId>
+      <groupId>doodle.broker.samples</groupId>
+      <artifactId>common</artifactId>
     </dependency>
     <dependency>
-      <groupId>doodle</groupId>
-      <artifactId>doodle-broker-starter-server</artifactId>
+      <groupId>doodle.broker</groupId>
+      <artifactId>broker-starter-server</artifactId>
     </dependency>
   </dependencies>
 

@@ -6,13 +6,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>doodle</groupId>
-    <artifactId>doodle-broker-parent</artifactId>
+    <groupId>doodle.broker</groupId>
+    <artifactId>broker-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../doodle-broker-parent/pom.xml</relativePath>
+    <relativePath>../broker-parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>doodle-broker-core</artifactId>
+  <artifactId>broker-core</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>

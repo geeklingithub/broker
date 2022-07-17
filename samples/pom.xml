@@ -6,12 +6,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>doodle</groupId>
-    <artifactId>doodle-broker-parent</artifactId>
+    <groupId>doodle.broker</groupId>
+    <artifactId>broker-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../doodle-broker-parent/pom.xml</relativePath>
+    <relativePath>../broker-parent/pom.xml</relativePath>
   </parent>
 
+  <groupId>doodle.broker.samples</groupId>
   <artifactId>samples</artifactId>
   <packaging>pom</packaging>
 
@@ -22,17 +23,17 @@
   </properties>
 
   <modules>
-    <module>broker-app</module>
-    <module>broker-common</module>
-    <module>broker-server</module>
+    <module>app</module>
+    <module>common</module>
+    <module>server</module>
     <module>protobuf-app</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>doodle</groupId>
-        <artifactId>broker-common</artifactId>
+        <groupId>doodle.broker.samples</groupId>
+        <artifactId>common</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

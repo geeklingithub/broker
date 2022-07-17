@@ -5,8 +5,8 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>doodle</groupId>
-  <artifactId>doodle-broker-build</artifactId>
+  <groupId>doodle.broker</groupId>
+  <artifactId>broker-build</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
